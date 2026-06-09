@@ -1,0 +1,24 @@
+# Python virtual environments & cache
+backend/venv/
+backend/.venv/
+backend/__pycache__/
+backend/app/__pycache__/
+.venv/
+venv/
+__pycache__/
+*.pyc
+
+# Frontend dependencies & build output
+dashboard-vue/node_modules/
+dashboard-vue/node_modules_old/
+dashboard-vue/dist/
+
+# IDE / System files
+.vscode/
+.idea/
+.DS_Store
+.superpowers/
+
+# Old deployment directories
+Province_Clusting/github-pages-deploy/
+

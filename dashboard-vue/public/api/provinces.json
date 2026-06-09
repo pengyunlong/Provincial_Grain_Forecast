@@ -1,0 +1,653 @@
+[
+  {
+    "name": "内蒙古",
+    "code": "150000",
+    "cluster_m0": 0,
+    "cluster_label": "中密度-中收入-口粮高位上升-饲料粮高位上升",
+    "stability": 6,
+    "metrics": {
+      "pop_density": 20.85368726273765,
+      "disposable_income": 40077.0,
+      "food_grain": 164.8,
+      "feed_grain": 177.08
+    },
+    "labels": {
+      "M0": 0,
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C4": 0,
+      "C5": 0
+    }
+  },
+  {
+    "name": "吉林",
+    "code": "220000",
+    "cluster_m0": 0,
+    "cluster_label": "中密度-中收入-口粮高位上升-饲料粮高位上升",
+    "stability": 6,
+    "metrics": {
+      "pop_density": 121.23025338048537,
+      "disposable_income": 31318.0,
+      "food_grain": 144.3,
+      "feed_grain": 139.5
+    },
+    "labels": {
+      "M0": 0,
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C4": 0,
+      "C5": 0
+    }
+  },
+  {
+    "name": "河北",
+    "code": "130000",
+    "cluster_m0": 0,
+    "cluster_label": "中密度-中收入-口粮高位上升-饲料粮高位上升",
+    "stability": 3,
+    "metrics": {
+      "pop_density": 391.54996872233255,
+      "disposable_income": 34665.0,
+      "food_grain": 147.3,
+      "feed_grain": 142.82000000000002
+    },
+    "labels": {
+      "M0": 0,
+      "C1": 3,
+      "C2": 0,
+      "C3": 0,
+      "C4": 3,
+      "C5": 2
+    }
+  },
+  {
+    "name": "河南",
+    "code": "410000",
+    "cluster_m0": 0,
+    "cluster_label": "中密度-中收入-口粮高位上升-饲料粮高位上升",
+    "stability": 3,
+    "metrics": {
+      "pop_density": 591.1085935879005,
+      "disposable_income": 31552.0,
+      "food_grain": 141.9,
+      "feed_grain": 157.68
+    },
+    "labels": {
+      "M0": 0,
+      "C1": 3,
+      "C2": 0,
+      "C3": 0,
+      "C4": 3,
+      "C5": 2
+    }
+  },
+  {
+    "name": "辽宁",
+    "code": "210000",
+    "cluster_m0": 0,
+    "cluster_label": "中密度-中收入-口粮高位上升-饲料粮高位上升",
+    "stability": 6,
+    "metrics": {
+      "pop_density": 280.6224479832405,
+      "disposable_income": 39844.0,
+      "food_grain": 144.5,
+      "feed_grain": 174.21999999999997
+    },
+    "labels": {
+      "M0": 0,
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C4": 0,
+      "C5": 0
+    }
+  },
+  {
+    "name": "黑龙江",
+    "code": "230000",
+    "cluster_m0": 0,
+    "cluster_label": "中密度-中收入-口粮高位上升-饲料粮高位上升",
+    "stability": 6,
+    "metrics": {
+      "pop_density": 66.91778078289401,
+      "disposable_income": 31269.0,
+      "food_grain": 134.6,
+      "feed_grain": 146.26
+    },
+    "labels": {
+      "M0": 0,
+      "C1": 0,
+      "C2": 0,
+      "C3": 0,
+      "C4": 0,
+      "C5": 0
+    }
+  },
+  {
+    "name": "上海",
+    "code": "310000",
+    "cluster_m0": 1,
+    "cluster_label": "高密度-高收入-口粮低位下降-饲料粮中位上升",
+    "stability": 6,
+    "metrics": {
+      "pop_density": 3010.069617448432,
+      "disposable_income": 88366.0,
+      "food_grain": 93.6,
+      "feed_grain": 172.26
+    },
+    "labels": {
+      "M0": 1,
+      "C1": 1,
+      "C2": 1,
+      "C3": 1,
+      "C4": 1,
+      "C5": 1
+    }
+  },
+  {
+    "name": "北京",
+    "code": "110000",
+    "cluster_m0": 1,
+    "cluster_label": "高密度-高收入-口粮低位下降-饲料粮中位上升",
+    "stability": 6,
+    "metrics": {
+      "pop_density": 1330.2428799252575,
+      "disposable_income": 85415.0,
+      "food_grain": 86.3,
+      "feed_grain": 123.45
+    },
+    "labels": {
+      "M0": 1,
+      "C1": 1,
+      "C2": 1,
+      "C3": 1,
+      "C4": 1,
+      "C5": 1
+    }
+  },
+  {
+    "name": "天津",
+    "code": "120000",
+    "cluster_m0": 1,
+    "cluster_label": "高密度-高收入-口粮低位下降-饲料粮中位上升",
+    "stability": 6,
+    "metrics": {
+      "pop_density": 1144.5527207541163,
+      "disposable_income": 53581.0,
+      "food_grain": 91.9,
+      "feed_grain": 137.95000000000002
+    },
+    "labels": {
+      "M0": 1,
+      "C1": 1,
+      "C2": 1,
+      "C3": 1,
+      "C4": 1,
+      "C5": 1
+    }
+  },
+  {
+    "name": "云南",
+    "code": "530000",
+    "cluster_m0": 2,
+    "cluster_label": "低密度-低收入-口粮低位下降-饲料粮低位上升",
+    "stability": 4,
+    "metrics": {
+      "pop_density": 121.47889879050996,
+      "disposable_income": 29932.0,
+      "food_grain": 118.2,
+      "feed_grain": 162.12999999999997
+    },
+    "labels": {
+      "M0": 2,
+      "C1": 3,
+      "C2": 2,
+      "C3": 3,
+      "C4": 2,
+      "C5": 2
+    }
+  },
+  {
+    "name": "四川",
+    "code": "510000",
+    "cluster_m0": 2,
+    "cluster_label": "低密度-低收入-口粮低位下降-饲料粮低位上升",
+    "stability": 4,
+    "metrics": {
+      "pop_density": 172.78990032372687,
+      "disposable_income": 34325.0,
+      "food_grain": 117.9,
+      "feed_grain": 194.33
+    },
+    "labels": {
+      "M0": 2,
+      "C1": 3,
+      "C2": 2,
+      "C3": 3,
+      "C4": 2,
+      "C5": 2
+    }
+  },
+  {
+    "name": "宁夏",
+    "code": "640000",
+    "cluster_m0": 2,
+    "cluster_label": "低密度-低收入-口粮低位下降-饲料粮低位上升",
+    "stability": 6,
+    "metrics": {
+      "pop_density": 140.315420712278,
+      "disposable_income": 33355.0,
+      "food_grain": 107.7,
+      "feed_grain": 87.42999999999999
+    },
+    "labels": {
+      "M0": 2,
+      "C1": 2,
+      "C2": 2,
+      "C3": 2,
+      "C4": 2,
+      "C5": 2
+    }
+  },
+  {
+    "name": "山西",
+    "code": "140000",
+    "cluster_m0": 2,
+    "cluster_label": "低密度-低收入-口粮低位下降-饲料粮低位上升",
+    "stability": 5,
+    "metrics": {
+      "pop_density": 219.8948724475257,
+      "disposable_income": 32441.0,
+      "food_grain": 116.8,
+      "feed_grain": 95.4
+    },
+    "labels": {
+      "M0": 2,
+      "C1": 3,
+      "C2": 2,
+      "C3": 2,
+      "C4": 2,
+      "C5": 2
+    }
+  },
+  {
+    "name": "广西",
+    "code": "450000",
+    "cluster_m0": 2,
+    "cluster_label": "低密度-低收入-口粮低位下降-饲料粮低位上升",
+    "stability": 4,
+    "metrics": {
+      "pop_density": 211.0220633270098,
+      "disposable_income": 31125.0,
+      "food_grain": 118.7,
+      "feed_grain": 187.54
+    },
+    "labels": {
+      "M0": 2,
+      "C1": 3,
+      "C2": 2,
+      "C3": 3,
+      "C4": 2,
+      "C5": 2
+    }
+  },
+  {
+    "name": "新疆",
+    "code": "650000",
+    "cluster_m0": 2,
+    "cluster_label": "低密度-低收入-口粮低位下降-饲料粮低位上升",
+    "stability": 6,
+    "metrics": {
+      "pop_density": 15.75472676094736,
+      "disposable_income": 30899.0,
+      "food_grain": 124.3,
+      "feed_grain": 88.11999999999999
+    },
+    "labels": {
+      "M0": 2,
+      "C1": 2,
+      "C2": 2,
+      "C3": 2,
+      "C4": 2,
+      "C5": 2
+    }
+  },
+  {
+    "name": "湖北",
+    "code": "420000",
+    "cluster_m0": 2,
+    "cluster_label": "低密度-低收入-口粮低位下降-饲料粮低位上升",
+    "stability": 3,
+    "metrics": {
+      "pop_density": 313.84417408125097,
+      "disposable_income": 36947.0,
+      "food_grain": 99.3,
+      "feed_grain": 144.57999999999996
+    },
+    "labels": {
+      "M0": 2,
+      "C1": 3,
+      "C2": 2,
+      "C3": 3,
+      "C4": 2,
+      "C5": 3
+    }
+  },
+  {
+    "name": "甘肃",
+    "code": "620000",
+    "cluster_m0": 2,
+    "cluster_label": "低密度-低收入-口粮低位下降-饲料粮低位上升",
+    "stability": 6,
+    "metrics": {
+      "pop_density": 60.82790191560308,
+      "disposable_income": 26612.0,
+      "food_grain": 131.4,
+      "feed_grain": 97.40999999999998
+    },
+    "labels": {
+      "M0": 2,
+      "C1": 2,
+      "C2": 2,
+      "C3": 2,
+      "C4": 2,
+      "C5": 2
+    }
+  },
+  {
+    "name": "贵州",
+    "code": "520000",
+    "cluster_m0": 2,
+    "cluster_label": "低密度-低收入-口粮低位下降-饲料粮低位上升",
+    "stability": 6,
+    "metrics": {
+      "pop_density": 219.1283542864916,
+      "disposable_income": 28561.0,
+      "food_grain": 119.5,
+      "feed_grain": 136.6
+    },
+    "labels": {
+      "M0": 2,
+      "C1": 2,
+      "C2": 2,
+      "C3": 2,
+      "C4": 2,
+      "C5": 2
+    }
+  },
+  {
+    "name": "陕西",
+    "code": "610000",
+    "cluster_m0": 2,
+    "cluster_label": "低密度-低收入-口粮低位下降-饲料粮低位上升",
+    "stability": 4,
+    "metrics": {
+      "pop_density": 192.08473035594787,
+      "disposable_income": 33905.0,
+      "food_grain": 137.7,
+      "feed_grain": 100.85
+    },
+    "labels": {
+      "M0": 2,
+      "C1": 3,
+      "C2": 0,
+      "C3": 2,
+      "C4": 2,
+      "C5": 2
+    }
+  },
+  {
+    "name": "青海",
+    "code": "630000",
+    "cluster_m0": 2,
+    "cluster_label": "低密度-低收入-口粮低位下降-饲料粮低位上升",
+    "stability": 6,
+    "metrics": {
+      "pop_density": 8.265032723162165,
+      "disposable_income": 30117.0,
+      "food_grain": 102.3,
+      "feed_grain": 97.24
+    },
+    "labels": {
+      "M0": 2,
+      "C1": 2,
+      "C2": 2,
+      "C3": 2,
+      "C4": 2,
+      "C5": 2
+    }
+  },
+  {
+    "name": "安徽",
+    "code": "340000",
+    "cluster_m0": 3,
+    "cluster_label": "高密度-高收入-口粮中位稳定-饲料粮高位上升",
+    "stability": 4,
+    "metrics": {
+      "pop_density": 436.9645243018248,
+      "disposable_income": 36782.0,
+      "food_grain": 134.3,
+      "feed_grain": 195.37
+    },
+    "labels": {
+      "M0": 3,
+      "C1": 3,
+      "C2": 3,
+      "C3": 0,
+      "C4": 3,
+      "C5": 2
+    }
+  },
+  {
+    "name": "山东",
+    "code": "370000",
+    "cluster_m0": 3,
+    "cluster_label": "高密度-高收入-口粮中位稳定-饲料粮高位上升",
+    "stability": 6,
+    "metrics": {
+      "pop_density": 641.8239659093672,
+      "disposable_income": 42077.0,
+      "food_grain": 98.8,
+      "feed_grain": 166.46
+    },
+    "labels": {
+      "M0": 3,
+      "C1": 3,
+      "C2": 3,
+      "C3": 3,
+      "C4": 3,
+      "C5": 3
+    }
+  },
+  {
+    "name": "广东",
+    "code": "440000",
+    "cluster_m0": 3,
+    "cluster_label": "高密度-高收入-口粮中位稳定-饲料粮高位上升",
+    "stability": 6,
+    "metrics": {
+      "pop_density": 710.9781934226022,
+      "disposable_income": 51474.0,
+      "food_grain": 105.8,
+      "feed_grain": 231.42
+    },
+    "labels": {
+      "M0": 3,
+      "C1": 3,
+      "C2": 3,
+      "C3": 3,
+      "C4": 3,
+      "C5": 3
+    }
+  },
+  {
+    "name": "江苏",
+    "code": "320000",
+    "cluster_m0": 3,
+    "cluster_label": "高密度-高收入-口粮中位稳定-饲料粮高位上升",
+    "stability": 5,
+    "metrics": {
+      "pop_density": 799.2584246726692,
+      "disposable_income": 55415.0,
+      "food_grain": 131.3,
+      "feed_grain": 203.96
+    },
+    "labels": {
+      "M0": 3,
+      "C1": 3,
+      "C2": 3,
+      "C3": 0,
+      "C4": 3,
+      "C5": 3
+    }
+  },
+  {
+    "name": "江西",
+    "code": "360000",
+    "cluster_m0": 3,
+    "cluster_label": "高密度-高收入-口粮中位稳定-饲料粮高位上升",
+    "stability": 3,
+    "metrics": {
+      "pop_density": 269.75151365965854,
+      "disposable_income": 36007.0,
+      "food_grain": 143.2,
+      "feed_grain": 203.16000000000005
+    },
+    "labels": {
+      "M0": 3,
+      "C1": 3,
+      "C2": 0,
+      "C3": 0,
+      "C4": 3,
+      "C5": 2
+    }
+  },
+  {
+    "name": "浙江",
+    "code": "330000",
+    "cluster_m0": 3,
+    "cluster_label": "高密度-高收入-口粮中位稳定-饲料粮高位上升",
+    "stability": 5,
+    "metrics": {
+      "pop_density": 632.8816952605542,
+      "disposable_income": 67013.0,
+      "food_grain": 128.5,
+      "feed_grain": 201.17000000000004
+    },
+    "labels": {
+      "M0": 3,
+      "C1": 3,
+      "C2": 3,
+      "C3": 0,
+      "C4": 3,
+      "C5": 3
+    }
+  },
+  {
+    "name": "海南",
+    "code": "460000",
+    "cluster_m0": 3,
+    "cluster_label": "高密度-高收入-口粮中位稳定-饲料粮高位上升",
+    "stability": 5,
+    "metrics": {
+      "pop_density": 296.43299238560945,
+      "disposable_income": 34829.0,
+      "food_grain": 100.2,
+      "feed_grain": 222.89
+    },
+    "labels": {
+      "M0": 3,
+      "C1": 3,
+      "C2": 3,
+      "C3": 3,
+      "C4": 3,
+      "C5": 2
+    }
+  },
+  {
+    "name": "湖南",
+    "code": "430000",
+    "cluster_m0": 3,
+    "cluster_label": "高密度-高收入-口粮中位稳定-饲料粮高位上升",
+    "stability": 4,
+    "metrics": {
+      "pop_density": 308.6549595462692,
+      "disposable_income": 37679.0,
+      "food_grain": 138.6,
+      "feed_grain": 190.21
+    },
+    "labels": {
+      "M0": 3,
+      "C1": 3,
+      "C2": 3,
+      "C3": 0,
+      "C4": 3,
+      "C5": 2
+    }
+  },
+  {
+    "name": "福建",
+    "code": "350000",
+    "cluster_m0": 3,
+    "cluster_label": "高密度-高收入-口粮中位稳定-饲料粮高位上升",
+    "stability": 6,
+    "metrics": {
+      "pop_density": 337.98716074235455,
+      "disposable_income": 47857.0,
+      "food_grain": 117.0,
+      "feed_grain": 204.51
+    },
+    "labels": {
+      "M0": 3,
+      "C1": 3,
+      "C2": 3,
+      "C3": 3,
+      "C4": 3,
+      "C5": 3
+    }
+  },
+  {
+    "name": "重庆",
+    "code": "500000",
+    "cluster_m0": 3,
+    "cluster_label": "高密度-高收入-口粮中位稳定-饲料粮高位上升",
+    "stability": 5,
+    "metrics": {
+      "pop_density": 387.7540229479881,
+      "disposable_income": 39713.0,
+      "food_grain": 135.3,
+      "feed_grain": 231.87
+    },
+    "labels": {
+      "M0": 3,
+      "C1": 3,
+      "C2": 3,
+      "C3": 0,
+      "C4": 3,
+      "C5": 3
+    }
+  },
+  {
+    "name": "西藏",
+    "code": "540000",
+    "cluster_m0": 4,
+    "cluster_label": "低密度-低收入-口粮高位下降-饲料粮低位稳定",
+    "stability": 6,
+    "metrics": {
+      "pop_density": 3.0780198817618145,
+      "disposable_income": 31358.0,
+      "food_grain": 124.0,
+      "feed_grain": 92.79
+    },
+    "labels": {
+      "M0": 4,
+      "C1": 4,
+      "C2": 4,
+      "C3": 4,
+      "C4": 4,
+      "C5": 4
+    }
+  }
+]

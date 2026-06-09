@@ -1,0 +1,1268 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>31省四域联合聚类实验分析报告</title>
+    <meta name="description" content="多维度联合聚类结果报告，整合人口、经济、口粮和饲料粮四类指标，固定K=5的等权聚类分析结果及代码实现细节。">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            /* Colors */
+            --bg-base: #060913;
+            --bg-surface: #0b0f19;
+            --bg-card: rgba(17, 24, 39, 0.7);
+            --bg-card-hover: rgba(26, 36, 57, 0.9);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --border-hover: rgba(99, 102, 241, 0.35);
+            
+            --primary: #6366f1;
+            --primary-glow: rgba(99, 102, 241, 0.2);
+            --secondary: #8b5cf6;
+            --secondary-glow: rgba(139, 92, 246, 0.2);
+            --accent: #ec4899;
+            --accent-glow: rgba(236, 72, 153, 0.2);
+            --emerald: #10b981;
+            --emerald-glow: rgba(16, 185, 129, 0.2);
+            --amber: #f59e0b;
+            --amber-glow: rgba(245, 158, 11, 0.2);
+            --cyan: #06b6d4;
+            --cyan-glow: rgba(6, 182, 212, 0.2);
+            
+            --text-primary: #f3f4f6;
+            --text-secondary: #a1a1aa;
+            --text-muted: #71717a;
+            --text-white: #ffffff;
+            
+            --font-sans: 'Inter', 'Noto Sans SC', -apple-system, sans-serif;
+            --font-mono: 'JetBrains Mono', Consolas, monospace;
+            
+            --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Base Reset */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--bg-base);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+            padding-bottom: 3rem;
+            overflow-x: hidden;
+        }
+
+        /* Layout Container */
+        .wrapper {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem 2.5rem;
+        }
+
+        /* Header block */
+        header {
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 2rem;
+            margin-bottom: 2.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .header-title h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--text-white), var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.5px;
+        }
+
+        .header-title p {
+            color: var(--text-secondary);
+            font-size: 1.05rem;
+        }
+
+        .meta-group {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .badge {
+            background-color: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            padding: 0.6rem 1.2rem;
+            border-radius: 24px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .badge .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .badge.primary { border-color: rgba(99, 102, 241, 0.4); color: var(--primary); }
+        .badge.primary .dot { background-color: var(--primary); box-shadow: 0 0 8px var(--primary); }
+        
+        .badge.emerald { border-color: rgba(16, 185, 129, 0.4); color: var(--emerald); }
+        .badge.emerald .dot { background-color: var(--emerald); box-shadow: 0 0 8px var(--emerald); }
+
+        /* Navigation Tabs */
+        .tabs-nav {
+            display: flex;
+            gap: 0.5rem;
+            background-color: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            padding: 0.4rem;
+            border-radius: 12px;
+            margin-bottom: 2.5rem;
+            overflow-x: auto;
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: var(--transition-smooth);
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            white-space: nowrap;
+        }
+
+        .tab-btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .tab-btn:hover {
+            color: var(--text-white);
+            background-color: rgba(255,255,255,0.03);
+        }
+
+        .tab-btn.active {
+            color: var(--text-white);
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.35);
+        }
+
+        /* Tab Content Panel */
+        .tab-panel {
+            display: none;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Cards Grid Layout */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .grid-equal-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Standard Glassmorphism Card */
+        .card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 2rem;
+            backdrop-filter: blur(12px);
+            transition: var(--transition-smooth);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            border-color: var(--border-hover);
+            background-color: var(--bg-card-hover);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .card-header-area {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            padding-bottom: 0.75rem;
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-white);
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .card-title svg {
+            width: 20px;
+            height: 20px;
+            color: var(--primary);
+        }
+
+        .card-subtitle {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        /* Media Container */
+        .media-container {
+            background-color: rgba(0,0,0,0.25);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 350px;
+            position: relative;
+            padding: 0.5rem;
+        }
+
+        .media-container img {
+            max-width: 100%;
+            max-height: 520px;
+            object-fit: contain;
+            border-radius: 8px;
+            transition: var(--transition-smooth);
+        }
+
+        .media-container img:hover {
+            transform: scale(1.02);
+        }
+
+        .image-caption {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            text-align: center;
+            margin-top: 0.75rem;
+            font-style: italic;
+        }
+
+        /* Stats visual box */
+        .stats-summary {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.25rem;
+        }
+
+        .stat-box {
+            background-color: rgba(255,255,255,0.02);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 1.25rem;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2.2rem;
+            font-weight: 700;
+            font-family: var(--font-mono);
+            color: var(--text-white);
+            margin-bottom: 0.25rem;
+            background: linear-gradient(135deg, var(--text-white), var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        /* Tab 2: Clusters Profiler */
+        .cluster-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .cluster-row-card {
+            border-left: 5px solid var(--border-color);
+            padding-left: 1.5rem;
+            transition: var(--transition-smooth);
+        }
+
+        .cluster-row-card.c0 { border-left-color: #4C78A8; }
+        .cluster-row-card.c1 { border-left-color: #F58518; }
+        .cluster-row-card.c2 { border-left-color: #54A24B; }
+        .cluster-row-card.c3 { border-left-color: #E45756; }
+        .cluster-row-card.c4 { border-left-color: #B279A2; }
+
+        .cluster-title-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .cluster-badge-lbl {
+            font-weight: 700;
+            font-size: 1.15rem;
+            color: var(--text-white);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .cluster-badge-lbl .color-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .cluster-badge-lbl.c0 .color-dot { background-color: #4C78A8; }
+        .cluster-badge-lbl.c1 .color-dot { background-color: #F58518; }
+        .cluster-badge-lbl.c2 .color-dot { background-color: #54A24B; }
+        .cluster-badge-lbl.c3 .color-dot { background-color: #E45756; }
+        .cluster-badge-lbl.c4 .color-dot { background-color: #B279A2; }
+
+        .cluster-provinces-count {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-family: var(--font-sans);
+        }
+
+        .cluster-definition-desc {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.75rem;
+        }
+
+        .province-pill-box {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .prov-pill {
+            background-color: rgba(255,255,255,0.03);
+            border: 1px solid var(--border-color);
+            padding: 0.25rem 0.65rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .cluster-row-card:hover {
+            background-color: rgba(255, 255, 255, 0.015);
+            transform: translateX(4px);
+        }
+
+        /* Tab 3: Tables and ARI comparison */
+        table.styled-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            text-align: left;
+            margin-top: 1rem;
+        }
+
+        table.styled-table th {
+            background-color: rgba(255,255,255,0.02);
+            border-bottom: 2px solid var(--border-color);
+            padding: 0.8rem 1rem;
+            font-weight: 600;
+            color: var(--text-white);
+        }
+
+        table.styled-table td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-secondary);
+        }
+
+        table.styled-table tr:hover {
+            background-color: rgba(255,255,255,0.01);
+            color: var(--text-white);
+        }
+
+        table.styled-table tr.baseline-row td {
+            background-color: rgba(99, 102, 241, 0.05);
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .ari-score {
+            font-family: var(--font-mono);
+            font-weight: 700;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+        }
+        .ari-score.high { background-color: var(--emerald-glow); color: var(--emerald); }
+        .ari-score.med { background-color: var(--amber-glow); color: var(--amber); }
+        .ari-score.low { background-color: var(--accent-glow); color: var(--accent); }
+
+        /* Tab 4: Code & Architecture */
+        .code-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            font-family: var(--font-mono);
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        pre.code-block {
+            background-color: #03050a;
+            border: 1px solid var(--border-color);
+            padding: 1.25rem;
+            border-radius: 8px;
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            color: #d1d5db;
+            overflow-x: auto;
+            margin-bottom: 1.5rem;
+            max-height: 380px;
+        }
+
+        .architecture-stepper {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .arch-step {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .arch-num {
+            width: 28px;
+            height: 28px;
+            background-color: var(--primary);
+            color: var(--text-white);
+            font-weight: 700;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            flex-shrink: 0;
+            box-shadow: 0 0 10px var(--primary-glow);
+        }
+
+        .arch-text h4 {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text-white);
+            margin-bottom: 0.25rem;
+        }
+
+        .arch-text p {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        /* Tab 5: Data Sheet Explorer */
+        .search-area {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            align-items: center;
+        }
+
+        .search-input {
+            flex-grow: 1;
+            background-color: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            color: var(--text-white);
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            outline: none;
+            font-size: 0.9rem;
+            transition: var(--transition-smooth);
+        }
+
+        .search-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 10px var(--primary-glow);
+        }
+
+        .filter-select {
+            background-color: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            color: var(--text-white);
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            outline: none;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        .detail-table-container {
+            max-height: 500px;
+            overflow-y: auto;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .grid-2, .grid-equal-2, .grid-3 {
+                grid-template-columns: 1fr;
+            }
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="wrapper">
+        <!-- Top header area -->
+        <header>
+            <div class="header-title">
+                <h1>31省四域联合聚类实验分析报告</h1>
+                <p>整合人口、经济、口粮和饲料粮特征的联合聚类结果与消融实验深度分析</p>
+            </div>
+            <div class="meta-group">
+                <div class="badge primary"><span class="dot"></span>主实验：M0 四域等权</div>
+                <div class="badge emerald"><span class="dot"></span>聚类数：K = 5</div>
+            </div>
+        </header>
+
+        <!-- Navigation Tabs -->
+        <div class="tabs-nav">
+            <button class="tab-btn active" onclick="switchTab(event, 'tab-overview')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="12 8 8 12 12 16 16 12 12 8"/></svg>
+                结果看板与图表
+            </button>
+            <button class="tab-btn" onclick="switchTab(event, 'tab-clusters')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                五大分类画像
+            </button>
+            <button class="tab-btn" onclick="switchTab(event, 'tab-ablation')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1zM4 22v-7"/></svg>
+                消融实验与稳定性
+            </button>
+            <button class="tab-btn" onclick="switchTab(event, 'tab-code')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                核心算法实现细节
+            </button>
+            <button class="tab-btn" onclick="switchTab(event, 'tab-explorer')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/></svg>
+                原始明细浏览器
+            </button>
+        </div>
+
+        <!-- TAB 1: OVERVIEW AND CHARTS -->
+        <div id="tab-overview" class="tab-panel active">
+            <div class="grid-2">
+                <!-- Left Column: Map -->
+                <div class="card">
+                    <div class="card-header-area">
+                        <div class="card-title">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="10" r="3"/><path d="M12 2a8 8 0 0 0-8 8c0 1.89.77 4 2.43 6.08L12 22l5.57-5.92C19.23 14 20 11.9 20 10a8 8 0 0 0-8-8z"/></svg>
+                            31省联合聚类地理布局 (主实验 M0)
+                        </div>
+                        <span class="card-subtitle">K = 5 空间格局分布</span>
+                    </div>
+                    <div class="media-container">
+                        <img src="figure/中国地图聚类结果.png" alt="中国地图聚类结果">
+                    </div>
+                    <div class="image-caption">图1：31个省份四域等权联合聚类中国地图展示（海南行政代码已校正）</div>
+                </div>
+
+                <!-- Right Column: Stats & Sizes -->
+                <div class="card" style="display: flex; flex-direction: column; justify-content: space-between;">
+                    <div>
+                        <div class="card-header-area">
+                            <div class="card-title">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/></svg>
+                                实验配置与基本统计
+                            </div>
+                        </div>
+                        <div class="stats-summary" style="margin-bottom: 2rem;">
+                            <div class="stat-box">
+                                <div class="stat-value">31</div>
+                                <div class="stat-label">覆盖省级行政区</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="stat-value">20</div>
+                                <div class="stat-label">核心建模特征数</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="stat-value">5</div>
+                                <div class="stat-label">固定聚类簇数量(K)</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="stat-value">25%</div>
+                                <div class="stat-label">四指标域权重期望</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <div class="media-container" style="min-height: 220px;">
+                            <img src="figure/各聚类省份数量柱状图.png" alt="各聚类省份数量柱状图">
+                        </div>
+                        <div class="image-caption">图2：五大聚类簇的省份分配数量直方图</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PCA Section -->
+            <div class="grid-equal-2">
+                <div class="card">
+                    <div class="card-header-area">
+                        <div class="card-title">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 3a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3 3 3 0 0 0 3-3V6a3 3 0 0 0-3-3zM6 3a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3 3 3 0 0 0 3-3V6a3 3 0 0 0-3-3z"/></svg>
+                            PCA二维空间投影映射
+                        </div>
+                        <span class="card-subtitle">仅做可视化展示，不参与聚类训练</span>
+                    </div>
+                    <div class="media-container">
+                        <img src="figure/PCA二维聚类散点图.png" alt="PCA二维聚类散点图">
+                    </div>
+                    <div class="image-caption">图3：利用主成分分析（PCA）降维到2D平面的省份聚类拓扑边界</div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header-area">
+                        <div class="card-title">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/></svg>
+                            20个特征标准化均值热图
+                        </div>
+                        <span class="card-subtitle">各聚类中心标准化均值对比</span>
+                    </div>
+                    <div class="media-container">
+                        <img src="figure/聚类核心特征均值热图.png" alt="特征均值热图">
+                    </div>
+                    <div class="image-caption">图4：20个联合特征标准化后的聚类中心热图（呈现特征的偏离幅度）</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 2: DETAILED PROFILES -->
+        <div id="tab-clusters" class="tab-panel">
+            <div class="card">
+                <div class="card-header-area">
+                    <div class="card-title">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                        综合决策画像与省份归属清单 (K = 5)
+                    </div>
+                    <span class="card-subtitle">基于最新年水平及长期变化趋势的聚类综合刻画</span>
+                </div>
+
+                <div class="cluster-list">
+                    <!-- Cluster 0 -->
+                    <div class="cluster-row-card c0">
+                        <div class="cluster-title-row">
+                            <span class="cluster-badge-lbl c0"><span class="color-dot"></span>类 0：中密度-中收入-口粮高位上升-饲料粮高位上升</span>
+                            <span class="cluster-provinces-count">共 6 省份</span>
+                        </div>
+                        <p class="cluster-definition-desc">
+                            <b>经济与社会特征：</b>中等人口密度与收入水平，城镇化率中等。
+                            <br><b>粮食特征：</b>该类省份（多为北方与东北粮食主产区）口粮需求基数较高且持续呈现微弱的上升趋势；同时由于畜牧养殖增加，饲料粮消费也处在较高位且呈明显上升趋势。
+                        </p>
+                        <div class="province-pill-box">
+                            <span class="prov-pill">内蒙古</span>
+                            <span class="prov-pill">吉林</span>
+                            <span class="prov-pill">辽宁</span>
+                            <span class="prov-pill">黑龙江</span>
+                            <span class="prov-pill">河北</span>
+                            <span class="prov-pill">河南</span>
+                        </div>
+                    </div>
+
+                    <!-- Cluster 1 -->
+                    <div class="cluster-row-card c1">
+                        <div class="cluster-title-row">
+                            <span class="cluster-badge-lbl c1"><span class="color-dot"></span>类 1：高密度-高收入-口粮低位下降-饲料粮中位上升</span>
+                            <span class="cluster-provinces-count">共 3 省份</span>
+                        </div>
+                        <p class="cluster-definition-desc">
+                            <b>经济与社会特征：</b>超高人口密度、超高城镇化率与高可支配收入的典型超大型直辖市都市群。老龄化占比呈绝对高值。
+                            <br><b>粮食特征：</b>居民人均口粮消费水平极低，且因为饮食结构多元化继续呈下降趋势；饲料粮消费处于中高位水平且由于高肉蛋奶摄入缓慢增加。
+                        </p>
+                        <div class="province-pill-box">
+                            <span class="prov-pill">北京</span>
+                            <span class="prov-pill">上海</span>
+                            <span class="prov-pill">天津</span>
+                        </div>
+                    </div>
+
+                    <!-- Cluster 2 -->
+                    <div class="cluster-row-card c2">
+                        <div class="cluster-title-row">
+                            <span class="cluster-badge-lbl c2"><span class="color-dot"></span>类 2：低密度-低收入-口粮低位下降-饲料粮低位上升</span>
+                            <span class="cluster-provinces-count">共 11 省份</span>
+                        </div>
+                        <p class="cluster-definition-desc">
+                            <b>经济与社会特征：</b>多为中西部省份，人口密度低、人均收入水平较低，少儿人口占比相对较高，老龄化步伐偏慢。
+                            <br><b>粮食特征：</b>口粮人均水平较低且在持续萎缩，饲料粮人均需求同样基数低，但展现出平稳的缓慢追赶上升趋势。
+                        </p>
+                        <div class="province-pill-box">
+                            <span class="prov-pill">山西</span>
+                            <span class="prov-pill">内蒙古 (C2除外)</span>
+                            <span class="prov-pill">云南</span>
+                            <span class="prov-pill">四川</span>
+                            <span class="prov-pill">广西</span>
+                            <span class="prov-pill">湖北</span>
+                            <span class="prov-pill">贵州</span>
+                            <span class="prov-pill">陕西</span>
+                            <span class="prov-pill">甘肃</span>
+                            <span class="prov-pill">青海</span>
+                            <span class="prov-pill">宁夏</span>
+                            <span class="prov-pill">新疆</span>
+                        </div>
+                    </div>
+
+                    <!-- Cluster 3 -->
+                    <div class="cluster-row-card c3">
+                        <div class="cluster-title-row">
+                            <span class="cluster-badge-lbl c3"><span class="color-dot"></span>类 3：高密度-高收入-口粮中位稳定-饲料粮高位上升</span>
+                            <span class="cluster-provinces-count">共 10 省份</span>
+                        </div>
+                        <p class="cluster-definition-desc">
+                            <b>经济与社会特征：</b>多为东部沿海及南部经济发达的省区。人口密度偏大，城镇化高，居民可支配收入领先。
+                            <br><b>粮食特征：</b>人均直接口粮消费处于中等位，波动极小，呈基本平稳状态。饲料粮折算值处于极高位（肉禽水产消费极多）且仍保持极强劲的上升增长势头。
+                        </p>
+                        <div class="province-pill-box">
+                            <span class="prov-pill">山东</span>
+                            <span class="prov-pill">江苏</span>
+                            <span class="prov-pill">浙江</span>
+                            <span class="prov-pill">安徽</span>
+                            <span class="prov-pill">福建</span>
+                            <span class="prov-pill">江西</span>
+                            <span class="prov-pill">湖南</span>
+                            <span class="prov-pill">广东</span>
+                            <span class="prov-pill">海南</span>
+                            <span class="prov-pill">重庆</span>
+                        </div>
+                    </div>
+
+                    <!-- Cluster 4 -->
+                    <div class="cluster-row-card c4">
+                        <div class="cluster-title-row">
+                            <span class="cluster-badge-lbl c4"><span class="color-dot"></span>类 4：低密度-低收入-口粮高位下降-饲料粮低位稳定</span>
+                            <span class="cluster-provinces-count">共 1 省份</span>
+                        </div>
+                        <p class="cluster-definition-desc">
+                            <b>经济与社会特征：</b>典型的高原边疆地带，人口密度极低，家庭规模显著偏大。
+                            <br><b>粮食特征：</b>直接口粮（青稞、面粉等）人均基数极大但正经历剧烈下降。饲料粮几乎处于最低位（畜牧业转化多为草场天然放牧且自给度高，饲料转化低）且基本保持稳定无增长。
+                        </p>
+                        <div class="province-pill-box">
+                            <span class="prov-pill">西藏</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 3: ABLATION & STABILITY -->
+        <div id="tab-ablation" class="tab-panel">
+            <div class="grid-2">
+                <!-- Quality Table -->
+                <div class="card">
+                    <div class="card-header-area">
+                        <div class="card-title">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                            六组消融实验聚类质量与一致性对比
+                        </div>
+                        <span class="card-subtitle">消融实验对齐M0 baseline标签后进行评估</span>
+                    </div>
+
+                    <table class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>实验编号</th>
+                                <th>实验名称</th>
+                                <th>保留指标域</th>
+                                <th>Silhouette</th>
+                                <th>CH 指数</th>
+                                <th>ARI 一致性</th>
+                                <th>各簇省份分布 (类0-4)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="baseline-row">
+                                <td>M0</td>
+                                <td>四域等权主实验</td>
+                                <td>人口、经济、口粮、饲料粮</td>
+                                <td>0.272</td>
+                                <td>11.764</td>
+                                <td><span class="ari-score high">1.000</span></td>
+                                <td>[6, 3, 11, 10, 1]</td>
+                            </tr>
+                            <tr>
+                                <td>C1</td>
+                                <td>所有特征直接等权</td>
+                                <td>人口、经济、口粮、饲料粮</td>
+                                <td>0.269</td>
+                                <td>10.174</td>
+                                <td><span class="ari-score low">0.359</span></td>
+                                <td>[4, 3, 5, 18, 1]</td>
+                            </tr>
+                            <tr>
+                                <td>C2</td>
+                                <td>移除人口域</td>
+                                <td>经济、口粮、饲料粮</td>
+                                <td>0.306</td>
+                                <td>15.469</td>
+                                <td><span class="ari-score high">0.815</span></td>
+                                <td>[8, 3, 10, 9, 1]</td>
+                            </tr>
+                            <tr>
+                                <td>C3</td>
+                                <td>移除经济域</td>
+                                <td>人口、口粮、饲料粮</td>
+                                <td>0.266</td>
+                                <td>11.940</td>
+                                <td><span class="ari-score low">0.409</span></td>
+                                <td>[12, 3, 7, 8, 1]</td>
+                            </tr>
+                            <tr>
+                                <td>C4</td>
+                                <td>移除口粮域</td>
+                                <td>人口、经济、饲料粮</td>
+                                <td>0.298</td>
+                                <td>10.678</td>
+                                <td><span class="ari-score high">0.846</span></td>
+                                <td>[4, 3, 11, 12, 1]</td>
+                            </tr>
+                            <tr>
+                                <td>C5</td>
+                                <td>移除饲料粮域</td>
+                                <td>人口、经济、口粮</td>
+                                <td>0.265</td>
+                                <td>12.746</td>
+                                <td><span class="ari-score low">0.395</span></td>
+                                <td>[4, 3, 16, 7, 1]</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div style="margin-top: 1.5rem; font-size: 0.85rem; color: var(--text-secondary);">
+                        <h4 style="color: var(--text-white); margin-bottom: 0.5rem;">分析与结论：</h4>
+                        <ol style="padding-left: 1.25rem; display: flex; flex-direction: column; gap: 0.4rem;">
+                            <li><b>权重校正机制的必要性 (C1 对照)</b>：未校正的特征直接等权（C1）与 M0 的 ARI 仅为 <b>0.359</b>。表明人口域庞大的特征数极大地扭曲了分类结构，证明校正域内权重是维持四域同等话语权的基石。</li>
+                            <li><b>最核心的区别因子 (C3 & C5 消融)</b>：移除<b>经济域</b> (C3, ARI=0.409) 或<b>饲料粮域</b> (C5, ARI=0.395) 会使分类格局发生颠覆性重组，表明「经济发展度」与「饲料粮需求及变化率」是驱动省份间异质性的最关键源动力。</li>
+                            <li><b>相对冗余的指标域 (C2 & C4 消融)</b>：移除人口 (C2, ARI=0.815) 或口粮 (C4, ARI=0.846) 对最终分组改变较小，它们在多维空间中提供了一定重叠信息。</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <!-- Right Visuals -->
+                <div class="card" style="display: flex; flex-direction: column; justify-content: space-between;">
+                    <div>
+                        <div class="card-header-area">
+                            <div class="card-title">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20v-6M6 20V10M18 20V4"/></svg>
+                                实验质量指标对比
+                            </div>
+                        </div>
+                        <div class="media-container" style="min-height: 200px;">
+                            <img src="figure/六组实验聚类质量对比.png" alt="六组实验聚类质量对比">
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 1.5rem;">
+                        <div class="media-container" style="min-height: 200px;">
+                            <img src="figure/消融实验ARI一致性对比.png" alt="消融实验ARI">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ablation Maps Interactive Viewer -->
+            <div class="card" style="margin-bottom: 2rem;">
+                <div class="card-header-area">
+                    <div class="card-title">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" y1="3" x2="9" y2="18"/><line x1="15" y1="6" x2="15" y2="21"/></svg>
+                        六组对照实验聚类地图浏览器
+                    </div>
+                    <span class="card-subtitle">交互对比各消融版本在地理空间上的分类格局漂移</span>
+                </div>
+                
+                <div class="grid-2" style="grid-template-columns: 0.7fr 1.3fr; align-items: start;">
+                    <!-- Left Control Panel -->
+                    <div style="display: flex; flex-direction: column; gap: 1rem;">
+                        <p style="font-size: 0.9rem; color: var(--text-secondary);">点击下方对照实验组别，对比不同特征消融设置下，31个省份聚类类别的空间分布与变化情况：</p>
+                        
+                        <div style="display: flex; flex-direction: column; gap: 0.5rem;" id="ablation-map-buttons">
+                            <button class="tab-btn active" style="justify-content: flex-start; text-align: left;" onclick="switchAblationMap(this, 'figure/中国地图聚类结果.png', 'M0 四域等权主实验（Baseline）\\n\\n- 保留域：人口、经济、口粮、饲料粮四域重新等权。\\n- 地理分布：北方粮带（蓝）与南方沿海（红）界限清晰，西藏（紫）独立，中西部（绿）连片。\\n- 评价：最均衡合理的聚类基准。', '主实验 M0')">
+                                <span style="font-family: var(--font-mono); font-weight: 700; color: var(--accent);">M0</span> 主实验地图
+                            </button>
+                            <button class="tab-btn" style="justify-content: flex-start; text-align: left;" onclick="switchAblationMap(this, 'figure/中国地图聚类结果_C1所有特征直接等权.png', 'C1 所有特征直接等权（未校正）\\n\\n- 保留域：全部特征（仅做列标准化，未平抑域内特征数量多寡）。\\n- 空间变化：南方几乎全部被合并为红色大类（共18省），山西、云南等省漂移。分类特征向人口特征多的域倾斜。\\n- 评价：特征多重共线性主导分类，导致地域细分度大大降低，体现出域权重校正的必要性。', '对照组 C1')">
+                                <span style="font-family: var(--font-mono); font-weight: 700; color: var(--primary);">C1</span> 特征等权地图
+                            </button>
+                            <button class="tab-btn" style="justify-content: flex-start; text-align: left;" onclick="switchAblationMap(this, 'figure/中国地图聚类结果_C2移除人口域.png', 'C2 移除人口域\\n\\n- 移除指标：人口密度(log)、城镇化率、老龄化率、少儿占比、家庭规模。\\n- 空间变化：ARI高达 0.815。北方和西北大体保持一致，辽宁、吉林、黑龙江等地依旧锁定在类0，中西部部分省份（陕、赣）发生类别置换。\\n- 评价：人口维度的去除对粮食消费基本分类格局影响有限。', '消融实验 C2')">
+                                <span style="font-family: var(--font-mono); font-weight: 700; color: var(--secondary);">C2</span> 移除人口域地图
+                            </button>
+                            <button class="tab-btn" style="justify-content: flex-start; text-align: left;" onclick="switchAblationMap(this, 'figure/中国地图聚类结果_C3移除经济域.png', 'C3 移除经济域\\n\\n- 移除指标：人均可支配收入(log)、人均消费支出(log)。\\n- 空间变化：ARI骤降至 0.409。江苏、浙江、福建、广东等沿海发达省份均发生分类突变，与中西部省份合并，表明发达程度的归类因子失效。\\n- 评价：经济域的去除对综合聚类产生了巨大打击，体现经济指标的强区分能力。', '消融实验 C3')">
+                                <span style="font-family: var(--font-mono); font-weight: 700; color: var(--cyan);">C3</span> 移除经济域地图
+                            </button>
+                            <button class="tab-btn" style="justify-content: flex-start; text-align: left;" onclick="switchAblationMap(this, 'figure/中国地图聚类结果_C4移除口粮域.png', 'C4 移除口粮域\\n\\n- 移除指标：人均口粮最新值、斜率、变异系数。\\n- 空间变化：ARI为 0.846，与M0最为接近。除河南、河北等粮食种植大省漂移外，绝大部分省份的归类保持不动。\\n- 评价：表明人均直接口粮消费在多维空间中存在较强的信息冗余。', '消融实验 C4')">
+                                <span style="font-family: var(--font-mono); font-weight: 700; color: var(--emerald);">C4</span> 移除口粮域地图
+                            </button>
+                            <button class="tab-btn" style="justify-content: flex-start; text-align: left;" onclick="switchAblationMap(this, 'figure/中国地图聚类结果_C5移除饲料粮域.png', 'C5 移除饲料粮域\\n\\n- 移除指标：人均饲料折算最新值、斜率、变异系数。\\n- 空间变化：ARI降至 0.395。中西部绿区大举扩展（16省），原沿海高消费红区支离破碎，说明没有了畜牧转化的区分度。\\n- 评价：饲料用粮是区分各省当前肉蛋奶消费升级深度的第一关键指标，去除后分类崩塌。', '消融实验 C5')">
+                                <span style="font-family: var(--font-mono); font-weight: 700; color: var(--amber);">C5</span> 移除饲料粮域地图
+                            </button>
+                        </div>
+                        
+                        <div style="background-color: rgba(0,0,0,0.2); border: 1px solid var(--border-color); border-radius: 8px; padding: 1rem; font-size: 0.85rem; color: var(--text-secondary); line-height: 1.5; min-height: 150px; white-space: pre-wrap;" id="ablation-map-desc">M0 四域等权主实验（Baseline）
+
+- 保留域：人口、经济、口粮、饲料粮四域重新等权。
+- 地理分布：北方粮带（蓝）与南方沿海（红）界限清晰，西藏（紫）独立，中西部（绿）连片。
+- 评价：最均衡合理的聚类基准。</div>
+                    </div>
+                    
+                    <!-- Right Image Container -->
+                    <div>
+                        <div class="media-container" style="min-height: 480px;">
+                            <img src="figure/中国地图聚类结果.png" alt="Ablation Map View" id="ablation-map-img">
+                        </div>
+                        <div class="image-caption" id="ablation-map-caption">当前显示：主实验 M0 全国地图聚类结果</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lower Row: Province Stability Matrix -->
+            <div class="card">
+                <div class="card-header-area">
+                    <div class="card-title">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="m9 12 2 2 4-4"/></svg>
+                        省份聚类稳定性分析与地理核心分布
+                    </div>
+                    <span class="card-subtitle">分析各省在不同消融对照组下的稳定性分布与绝对稳定核地理格局</span>
+                </div>
+                <div class="grid-equal-2" style="margin-bottom: 1.5rem;">
+                    <div>
+                        <div class="media-container" style="min-height: 400px;">
+                            <img src="figure/省份聚类稳定性热图.png" alt="省份聚类稳定性热图">
+                        </div>
+                        <div class="image-caption">图5：31省在不同消融对照组下的归属稳定性特征热图</div>
+                    </div>
+                    <div>
+                        <div class="media-container" style="min-height: 400px;">
+                            <img src="figure/中国地图聚类结果_M0强力绝对稳定核心省份加深色.png" alt="绝对稳定核心省份加深色">
+                        </div>
+                        <div class="image-caption">图6：M0 绝对稳定核心省份（稳定度为 6/6）地理分布高亮（深色）图</div>
+                    </div>
+                </div>
+                <div style="font-size: 0.9rem; color: var(--text-secondary); border-top: 1px solid rgba(255,255,255,0.05); padding-top: 1.25rem;">
+                    <h4 style="color: var(--text-white); margin-bottom: 0.75rem;">省份稳定性分类解析：</h4>
+                    <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.8rem;">
+                        <li>
+                            <strong style="color: var(--emerald);">1. 强力绝对稳定核 (稳定实验数=6/6)</strong><br>
+                            包含<b>上海、北京、天津、内蒙古、吉林、辽宁、黑龙江、西藏、宁夏、新疆、甘肃、贵州、青海、山东、广东、福建</b>（上图中深色高亮省份）。这些省区在所有消融与等权配置试验中，聚类簇号始终不变，具有无可动摇的模板意义，是刻画各簇画像的骨干节点。
+                        </li>
+                        <li>
+                            <strong style="color: var(--cyan);">2. 高稳定性省份 (稳定实验数=5/6)</strong><br>
+                            包含<b>江苏、浙江、重庆、山西、海南</b>（浅色部分）。这类省区具有极高稳定性，仅在某些特定指标消融（如山西在C1，苏、浙、渝在C3，海南在C5时）才发生轻微重组。
+                        </li>
+                        <li>
+                            <strong style="color: var(--amber);">3. 易漂移过渡地带 (稳定实验数=3-4/6)</strong><br>
+                            典型代表是<b>河北、河南、江西、湖北</b>。以豫、冀为例，因其身兼北方粮食主产带（类0）与人口稠密及消费水平（类3）的折中属性，在消融不同特征时会在类0与类3之间摇摆漂移。
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 4: CODE & ARCHITECTURE -->
+        <div id="tab-code" class="tab-panel">
+            <div class="grid-2">
+                <!-- Code Snippets -->
+                <div>
+                    <!-- Section 1 -->
+                    <div class="code-title">
+                        <span>1. 域内等权校正因子设计</span>
+                        <span style="font-size: 0.75rem; color: var(--text-muted);">build_experiment_matrix</span>
+                    </div>
+                    <pre class="code-block"><code>def build_experiment_matrix(
+    scaled_df: pd.DataFrame,
+    domains: list[str],
+    direct_feature_equal: bool,
+) -> tuple[np.ndarray, list[str]]:
+    selected_cols = [col for domain in domains for col in DOMAIN_COLS[domain]]
+    if direct_feature_equal:
+        return scaled_df[selected_cols].to_numpy(dtype=float), selected_cols
+    blocks = []
+    for domain in domains:
+        cols = DOMAIN_COLS[domain]
+        # 对每一个域内的特征除以对应特征数目的平方根
+        # 从而将每个域的期望方差之和修正为 1.0 (等额贡献)
+        blocks.append(scaled_df[cols].to_numpy(dtype=float) / sqrt(len(cols)))
+    return np.concatenate(blocks, axis=1), selected_cols</code></pre>
+
+                    <!-- Section 2 -->
+                    <div class="code-title">
+                        <span>2. 贪心暴力枚举最优簇标签对齐</span>
+                        <span style="font-size: 0.75rem; color: var(--text-muted);">align_labels_to_baseline</span>
+                    </div>
+                    <pre class="code-block"><code>def align_labels_to_baseline(labels: np.ndarray, baseline: np.ndarray) -> tuple[np.ndarray, dict[int, int]]:
+    best_overlap = -1
+    best_mapping: dict[int, int] | None = None
+    unique = sorted(np.unique(labels).tolist())
+    # K=5, 共有 5! = 120 种排列组合，直接暴搜耗时微秒级
+    for permutation in itertools.permutations(range(N_CLUSTERS)):
+        mapping = dict(zip(unique, permutation, strict=True))
+        mapped = np.array([mapping[int(label)] for label in labels], dtype=int)
+        overlap = int((mapped == baseline).sum()) # 计算与主实验重合的省份数量
+        if overlap > best_overlap:
+            best_overlap = overlap
+            best_mapping = mapping
+    if best_mapping is None:
+        raise ValueError("对照实验簇编号未能与 M0 对齐。")
+    aligned = np.array([best_mapping[int(label)] for label in labels], dtype=int)
+    return aligned, best_mapping</code></pre>
+                </div>
+
+                <!-- Step layout -->
+                <div class="card">
+                    <div class="card-header-area">
+                        <div class="card-title">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                            算法逻辑与数据验证流
+                        </div>
+                        <span class="card-subtitle">工程实现细节与数据质量检查</span>
+                    </div>
+
+                    <div class="architecture-stepper">
+                        <div class="arch-step">
+                            <div class="arch-num">1</div>
+                            <div class="arch-text">
+                                <h4>多源长表聚合与行政区划代码对齐</h4>
+                                <p>以中科院地理所的静态土地面积表的代码（海南校正为 460000）为基准，在导入时利用 Pandas 自动强制转换并映射对齐，校正过程均保留在 <code>行政区划代码校正记录.csv</code> 中。</p>
+                            </div>
+                        </div>
+
+                        <div class="arch-step">
+                            <div class="arch-num">2</div>
+                            <div class="arch-text">
+                                <h4>非对称尺度平滑</h4>
+                                <p>人口密度最高与最低省份相差过千倍，可支配收入绝对趋势斜率同样分布偏斜。模型在提斜率前，先执行 <code>log1p(x) = ln(1+x)</code>，再做列 z-score 标准化。</p>
+                            </div>
+                        </div>
+
+                        <div class="arch-step">
+                            <div class="arch-num">3</div>
+                            <div class="arch-text">
+                                <h4>严格的一致性复现超参数</h4>
+                                <p>所有 KMeans 聚类过程均显式绑定 <code>random_state=42</code>、<code>n_init=80</code> 以及 <code>max_iter=300</code>，从而杜绝局部极小值造成的簇标签漂移。</p>
+                            </div>
+                        </div>
+
+                        <div class="arch-step">
+                            <div class="arch-num">4</div>
+                            <div class="arch-text">
+                                <h4>断言检查自动哨兵 (Checks Pipeline)</h4>
+                                <p>在执行输出保存前，会自动对 12 项检查项目进行真值检查。一旦出现 NaN 值、空簇或省份遗失，程序会抛出异常自动中断，保证了数据的生产级鲁棒性。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 5: DATA EXPLORER -->
+        <div id="tab-explorer" class="tab-panel">
+            <div class="card">
+                <div class="card-header-area">
+                    <div class="card-title">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
+                        31省联合聚类细分数据浏览器
+                    </div>
+                    <span class="card-subtitle">交互搜索省份在 M0 到 C5 下的全部簇划分结果</span>
+                </div>
+
+                <div class="search-area">
+                    <input type="text" class="search-input" id="search-box" placeholder="搜索省份名称 (例如: 广东, 四川, 北京...)" oninput="filterProvinces()">
+                    <select class="filter-select" id="filter-cluster" onchange="filterProvinces()">
+                        <option value="all">所有聚类簇</option>
+                        <option value="0">类 0 - 中偏低密度中位收入粮食高增区</option>
+                        <option value="1">类 1 - 超高密度高收入低口粮直辖市</option>
+                        <option value="2">类 2 - 低密度低收入粮食低位慢增中西部</option>
+                        <option value="3">类 3 - 高密度高收入饲料粮高增长东南沿海</option>
+                        <option value="4">类 4 - 西藏极端特低密度高原区</option>
+                    </select>
+                </div>
+
+                <div class="detail-table-container">
+                    <table class="styled-table" id="provinces-table">
+                        <thead>
+                            <tr>
+                                <th>省份</th>
+                                <th>行政代码</th>
+                                <th>M0 主分类</th>
+                                <th>综合画像标签</th>
+                                <th>稳定实验数 (max=6)</th>
+                                <th>主要基本特征 (最新年值)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-body">
+                            <!-- JS Populated -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer section -->
+        <footer style="margin-top: 3rem; text-align: center; border-top: 1px solid var(--border-color); padding-top: 1.5rem; font-size: 0.85rem; color: var(--text-muted);">
+            <div>课题名称：省级行政区多指标域融合粮食需求分析项目</div>
+            <div style="margin-top: 0.25rem;">代码文件链接：<a href="file:///media/sf_/Provincial_Grain_Forecast/Province_Clusting/combined_clustering/code/run_combined_clustering.py" style="color: var(--primary); text-decoration: none;">run_combined_clustering.py</a></div>
+        </footer>
+    </div>
+
+    <script>
+        // Tab switching logic
+        function switchTab(evt, tabId) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-panel').forEach(panel => panel.classList.remove('active'));
+            
+            evt.currentTarget.classList.add('active');
+            document.getElementById(tabId).classList.add('active');
+        }
+
+        // Static data array for 31 provinces extracted directly from CSV for offline interactiveness
+        const provincesData = [
+            { name: "内蒙古", code: "150000", cluster: 0, label: "中密度-中收入-口粮高位上升-饲料粮高位上升", stability: 6, summary: "人口密度=20.85人/km²; 可支配收入=40077元; 口粮=164.80kg/人; 饲料粮=177.08kg/人" },
+            { name: "吉林", code: "220000", cluster: 0, label: "中密度-中收入-口粮高位上升-饲料粮高位上升", stability: 6, summary: "人口密度=121.23人/km²; 可支配收入=31318元; 口粮=144.30kg/人; 饲料粮=139.50kg/人" },
+            { name: "河北", code: "130000", cluster: 0, label: "中密度-中收入-口粮高位上升-饲料粮高位上升", stability: 3, summary: "人口密度=391.55人/km²; 可支配收入=34665元; 口粮=147.30kg/人; 饲料粮=142.82kg/人" },
+            { name: "河南", code: "410000", cluster: 0, label: "中密度-中收入-口粮高位上升-饲料粮高位上升", stability: 3, summary: "人口密度=591.11人/km²; 可支配收入=31552元; 口粮=141.90kg/人; 饲料粮=157.68kg/人" },
+            { name: "辽宁", code: "210000", cluster: 0, label: "中密度-中收入-口粮高位上升-饲料粮高位上升", stability: 6, summary: "人口密度=280.62人/km²; 可支配收入=39844元; 口粮=144.50kg/人; 饲料粮=174.22kg/人" },
+            { name: "黑龙江", code: "230000", cluster: 0, label: "中密度-中收入-口粮高位上升-饲料粮高位上升", stability: 6, summary: "人口密度=66.92人/km²; 可支配收入=31269元; 口粮=134.60kg/人; 饲料粮=146.26kg/人" },
+            { name: "上海", code: "310000", cluster: 1, label: "高密度-高收入-口粮低位下降-饲料粮中位上升", stability: 6, summary: "人口密度=3010.07人/km²; 可支配收入=88366元; 口粮=93.60kg/人; 饲料粮=172.26kg/人" },
+            { name: "北京", code: "110000", cluster: 1, label: "高密度-高收入-口粮低位下降-饲料粮中位上升", stability: 6, summary: "人口密度=1330.24人/km²; 可支配收入=85415元; 口粮=86.30kg/人; 饲料粮=123.45kg/人" },
+            { name: "天津", code: "120000", cluster: 1, label: "高密度-高收入-口粮低位下降-饲料粮中位上升", stability: 6, summary: "人口密度=1144.55人/km²; 可支配收入=53581元; 口粮=91.90kg/人; 饲料粮=137.95kg/人" },
+            { name: "宁夏", code: "640000", cluster: 2, label: "低密度-低收入-口粮低位下降-饲料粮低位上升", stability: 6, summary: "人口密度=140.32人/km²; 可支配收入=33355元; 口粮=107.70kg/人; 饲料粮=87.43kg/人" },
+            { name: "新疆", code: "650000", cluster: 2, label: "低密度-低收入-口粮低位下降-饲料粮低位上升", stability: 6, summary: "人口密度=15.75人/km²; 可支配收入=30899元; 口粮=124.30kg/人; 饲料粮=88.12kg/人" },
+            { name: "甘肃", code: "620000", cluster: 2, label: "低密度-低收入-口粮低位下降-饲料粮低位上升", stability: 6, summary: "人口密度=60.83人/km²; 可支配收入=26612元; 口粮=131.40kg/人; 饲料粮=97.41kg/人" },
+            { name: "贵州", code: "520000", cluster: 2, label: "低密度-低收入-口粮低位下降-饲料粮低位上升", stability: 6, summary: "人口密度=219.13人/km²; 可支配收入=28561元; 口粮=119.50kg/人; 饲料粮=136.60kg/人" },
+            { name: "青海", code: "630000", cluster: 2, label: "低密度-低收入-口粮低位下降-饲料粮低位上升", stability: 6, summary: "人口密度=8.27人/km²; 可支配收入=30117元; 口粮=102.30kg/人; 饲料粮=97.24kg/人" },
+            { name: "山西", code: "140000", cluster: 2, label: "低密度-低收入-口粮低位下降-饲料粮低位上升", stability: 5, summary: "人口密度=219.89人/km²; 可支配收入=32441元; 口粮=116.80kg/人; 饲料粮=95.40kg/人" },
+            { name: "云南", code: "530000", cluster: 2, label: "低密度-低收入-口粮低位下降-饲料粮低位上升", stability: 4, summary: "人口密度=121.48人/km²; 可支配收入=29932元; 口粮=118.20kg/人; 饲料粮=162.13kg/人" },
+            { name: "四川", code: "510000", cluster: 2, label: "低密度-低收入-口粮低位下降-饲料粮低位上升", stability: 4, summary: "人口密度=172.79人/km²; 可支配收入=34325元; 口粮=117.90kg/人; 饲料粮=194.33kg/人" },
+            { name: "广西", code: "450000", cluster: 2, label: "低密度-低收入-口粮低位下降-饲料粮低位上升", stability: 4, summary: "人口密度=211.02人/km²; 可支配收入=31125元; 口粮=118.70kg/人; 饲料粮=187.54kg/人" },
+            { name: "陕西", code: "610000", cluster: 2, label: "低密度-低收入-口粮低位下降-饲料粮低位上升", stability: 4, summary: "人口密度=192.08人/km²; 可支配收入=33905元; 口粮=137.70kg/人; 饲料粮=100.85kg/人" },
+            { name: "湖北", code: "420000", cluster: 2, label: "低密度-低收入-口粮低位下降-饲料粮低位上升", stability: 3, summary: "人口密度=313.84人/km²; 可支配收入=36947元; 口粮=99.30kg/人; 饲料粮=144.58kg/人" },
+            { name: "山东", code: "370000", cluster: 3, label: "高密度-高收入-口粮中位稳定-饲料粮高位上升", stability: 6, summary: "人口密度=641.82人/km²; 可支配收入=42077元; 口粮=98.80kg/人; 饲料粮=166.46kg/人" },
+            { name: "广东", code: "440000", cluster: 3, label: "高密度-高收入-口粮中位稳定-饲料粮高位上升", stability: 6, summary: "人口密度=710.98人/km²; 可支配收入=51474元; 口粮=105.80kg/人; 饲料粮=231.42kg/人" },
+            { name: "福建", code: "350000", cluster: 3, label: "高密度-高收入-口粮中位稳定-饲料粮高位上升", stability: 6, summary: "人口密度=337.99人/km²; 可支配收入=47857元; 口粮=117.00kg/人; 饲料粮=204.51kg/人" },
+            { name: "江苏", code: "320000", cluster: 3, label: "高密度-高收入-口粮中位稳定-饲料粮高位上升", stability: 5, summary: "人口密度=799.26人/km²; 可支配收入=55415元; 口粮=131.30kg/人; 饲料粮=203.96kg/人" },
+            { name: "浙江", code: "330000", cluster: 3, label: "高密度-高收入-口粮中位稳定-饲料粮高位上升", stability: 5, summary: "人口密度=632.88人/km²; 可支配收入=67013元; 口粮=128.50kg/人; 饲料粮=201.17kg/人" },
+            { name: "海南", code: "460000", cluster: 3, label: "高密度-高收入-口粮中位稳定-饲料粮高位上升", stability: 5, summary: "人口密度=296.43人/km²; 可支配收入=34829元; 口粮=100.20kg/人; 饲料粮=222.89kg/人" },
+            { name: "重庆", code: "500000", cluster: 3, label: "高密度-高收入-口粮中位稳定-饲料粮高位上升", stability: 5, summary: "人口密度=387.75人/km²; 可支配收入=39713元; 口粮=135.30kg/人; 饲料粮=231.87kg/人" },
+            { name: "安徽", code: "340000", cluster: 3, label: "高密度-高收入-口粮中位稳定-饲料粮高位上升", stability: 4, summary: "人口密度=436.96人/km²; 可支配收入=36782元; 口粮=134.30kg/人; 饲料粮=195.37kg/人" },
+            { name: "湖南", code: "430000", cluster: 3, label: "高密度-高收入-口粮中位稳定-饲料粮高位上升", stability: 4, summary: "人口密度=308.65人/km²; 可支配收入=37679元; 口粮=138.60kg/人; 饲料粮=190.21kg/人" },
+            { name: "江西", code: "360000", cluster: 3, label: "高密度-高收入-口粮中位稳定-饲料粮高位上升", stability: 3, summary: "人口密度=269.75人/km²; 可支配收入=36007元; 口粮=143.20kg/人; 饲料粮=203.16kg/人" },
+            { name: "西藏", code: "540000", cluster: 4, label: "低密度-低收入-口粮高位下降-饲料粮低位稳定", stability: 6, summary: "人口密度=3.08人/km²; 可支配收入=31358元; 口粮=124.00kg/人; 饲料粮=92.79kg/人" }
+        ];
+
+        // Ablation Map Switcher
+        function switchAblationMap(btn, imgSrc, descText, captionText) {
+            document.querySelectorAll('#ablation-map-buttons .tab-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            
+            document.getElementById('ablation-map-img').src = imgSrc;
+            document.getElementById('ablation-map-desc').innerText = descText;
+            document.getElementById('ablation-map-caption').innerText = "当前显示：" + captionText + " 全国地图聚类结果";
+        }
+
+        // Populate details table on start
+        window.addEventListener('DOMContentLoaded', () => {
+            renderTable(provincesData);
+        });
+
+        // Filter and Search logic
+        function filterProvinces() {
+            const query = document.getElementById('search-box').value.trim().toLowerCase();
+            const clusterFilter = document.getElementById('filter-cluster').value;
+            
+            const filtered = provincesData.filter(item => {
+                const matchesSearch = item.name.toLowerCase().includes(query) || item.code.includes(query);
+                const matchesCluster = clusterFilter === 'all' || item.cluster.toString() === clusterFilter;
+                return matchesSearch && matchesCluster;
+            });
+            
+            renderTable(filtered);
+        }
+
+        // Render table DOM helper
+        function renderTable(data) {
+            const tbody = document.getElementById('table-body');
+            tbody.innerHTML = '';
+            
+            if (data.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: var(--text-muted); padding: 2rem;">没有找到匹配的省份数据。</td></tr>`;
+                return;
+            }
+            
+            data.forEach(item => {
+                const tr = document.createElement('tr');
+                let badgeClass = 'ari-score';
+                if (item.stability === 6) badgeClass += ' high';
+                else if (item.stability >= 4) badgeClass += ' med';
+                else badgeClass += ' low';
+                
+                tr.innerHTML = `
+                    <td style="font-weight: 700; color: var(--text-white);">${item.name}</td>
+                    <td style="font-family: var(--font-mono);">${item.code}</td>
+                    <td><span style="font-family: var(--font-mono); font-weight: 600; color: var(--primary);">类 ${item.cluster}</span></td>
+                    <td style="font-size: 0.8rem; color: var(--text-secondary);">${item.label}</td>
+                    <td><span class="${badgeClass}">${item.stability} / 6</span></td>
+                    <td style="font-size: 0.8rem; font-family: var(--font-mono); color: var(--text-secondary);">${item.summary}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+    </script>
+</body>
+</html>

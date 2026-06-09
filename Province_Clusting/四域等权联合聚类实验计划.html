@@ -1,0 +1,2021 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>31省四域等权联合聚类实验计划 - 方案交互说明</title>
+    <meta name="description" content="31省四域等权联合聚类实验计划，包含实验目标、方案设计、核心特征、计算原理、实验配置以及实施路线图。">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            /* Colors */
+            --bg-base: #080c14;
+            --bg-surface: #0f1624;
+            --bg-card: rgba(20, 28, 45, 0.6);
+            --bg-card-hover: rgba(30, 41, 67, 0.85);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --border-hover: rgba(99, 102, 241, 0.3);
+            
+            --primary: #6366f1;
+            --primary-glow: rgba(99, 102, 241, 0.15);
+            --secondary: #8b5cf6;
+            --secondary-glow: rgba(139, 92, 246, 0.15);
+            --accent: #ec4899;
+            --accent-glow: rgba(236, 72, 153, 0.15);
+            --emerald: #10b981;
+            --emerald-glow: rgba(16, 185, 129, 0.15);
+            --amber: #f59e0b;
+            --amber-glow: rgba(245, 158, 11, 0.15);
+            
+            --text-primary: #f3f4f6;
+            --text-secondary: #9ca3af;
+            --text-muted: #6b7280;
+            --text-white: #ffffff;
+            
+            --font-sans: 'Inter', 'Noto Sans SC', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            --font-mono: 'JetBrains Mono', Consolas, Monaco, monospace;
+            
+            --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --sidebar-width: 280px;
+        }
+
+        /* Base styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--bg-base);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Hide scrollbars */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-base);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Sidebar Navigation */
+        aside {
+            width: var(--sidebar-width);
+            background-color: var(--bg-surface);
+            border-right: 1px solid var(--border-color);
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            padding: 2rem 1.5rem;
+            justify-content: space-between;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 15px rgba(99, 102, 241, 0.4);
+        }
+
+        .logo-text h1 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            background: linear-gradient(to right, var(--text-white), var(--text-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .logo-text p {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            flex-grow: 1;
+            overflow-y: auto;
+            margin-bottom: 2rem;
+            padding-right: 0.25rem;
+        }
+
+        .nav-links li a {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.8rem 1rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: var(--transition-smooth);
+            border: 1px solid transparent;
+        }
+
+        .nav-links li a:hover {
+            color: var(--text-white);
+            background-color: rgba(255, 255, 255, 0.03);
+            border-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .nav-links li.active a {
+            color: var(--text-white);
+            background: linear-gradient(90deg, var(--primary-glow), transparent);
+            border-color: rgba(99, 102, 241, 0.2);
+            border-left: 3px solid var(--primary);
+        }
+
+        .nav-links li a svg {
+            width: 18px;
+            height: 18px;
+            transition: var(--transition-smooth);
+        }
+
+        .nav-links li.active a svg {
+            color: var(--primary);
+        }
+
+        .sidebar-footer {
+            border-top: 1px solid var(--border-color);
+            padding-top: 1.5rem;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .sidebar-footer div {
+            margin-bottom: 0.25rem;
+        }
+
+        /* Main Content Container */
+        main {
+            margin-left: var(--sidebar-width);
+            flex-grow: 1;
+            padding: 2.5rem 3rem;
+            max-width: 1400px;
+            width: calc(100% - var(--sidebar-width));
+        }
+
+        /* Header Dashboard Info */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 1.5rem;
+        }
+
+        .header-title h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-white);
+            margin-bottom: 0.25rem;
+        }
+
+        .header-title p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .meta-badges {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .badge {
+            background-color: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+        }
+
+        .badge.primary {
+            border-color: rgba(99, 102, 241, 0.3);
+            color: var(--primary);
+        }
+
+        .badge.emerald {
+            border-color: rgba(16, 185, 129, 0.3);
+            color: var(--emerald);
+        }
+
+        .badge .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .badge.primary .dot { background-color: var(--primary); }
+        .badge.emerald .dot { background-color: var(--emerald); }
+
+        /* General Section Layout */
+        section {
+            margin-bottom: 4rem;
+            scroll-margin-top: 2rem;
+        }
+
+        .section-header {
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .section-icon {
+            width: 32px;
+            height: 32px;
+            background-color: var(--primary-glow);
+            color: var(--primary);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+        }
+
+        .section-header h3 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--text-white);
+        }
+
+        /* Glassmorphism Cards */
+        .card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+            transition: var(--transition-smooth);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            opacity: 0;
+            transition: var(--transition-smooth);
+        }
+
+        .card:hover {
+            border-color: var(--border-hover);
+            background-color: var(--bg-card-hover);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .card:hover::before {
+            opacity: 1;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-white);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+
+        /* Section 1: Objectives & Bounds */
+        .scope-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .scope-box {
+            padding: 1.5rem;
+            border-radius: 10px;
+            background-color: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-color);
+        }
+
+        .scope-box.in {
+            border-left: 4px solid var(--emerald);
+        }
+
+        .scope-box.out {
+            border-left: 4px solid var(--accent);
+        }
+
+        .scope-title {
+            font-size: 1.05rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .scope-box.in .scope-title { color: var(--emerald); }
+        .scope-box.out .scope-title { color: var(--accent); }
+
+        .scope-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .scope-list li {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+        }
+
+        .scope-list li svg {
+            flex-shrink: 0;
+            width: 16px;
+            height: 16px;
+            margin-top: 3px;
+        }
+
+        .scope-box.in li svg { color: var(--emerald); }
+        .scope-box.out li svg { color: var(--accent); }
+
+        /* Section 2: Schemes */
+        .scheme-cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+
+        .scheme-card {
+            border-radius: 12px;
+            padding: 1.5rem;
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            transition: var(--transition-smooth);
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .scheme-card:hover {
+            transform: translateY(-4px);
+            background-color: var(--bg-card-hover);
+        }
+
+        .scheme-card.selected {
+            border-color: var(--emerald);
+            background: linear-gradient(180deg, var(--bg-card), rgba(16, 185, 129, 0.05));
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.15);
+        }
+
+        .scheme-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .scheme-name {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-white);
+        }
+
+        .scheme-badge {
+            font-size: 0.75rem;
+            padding: 0.25rem 0.6rem;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .scheme-card.selected .scheme-badge {
+            background-color: var(--emerald-glow);
+            color: var(--emerald);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .scheme-card:not(.selected) .scheme-badge {
+            background-color: rgba(255, 255, 255, 0.05);
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+        }
+
+        .scheme-desc {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            flex-grow: 1;
+        }
+
+        .scheme-pros-cons {
+            font-size: 0.8rem;
+            border-top: 1px solid var(--border-color);
+            padding-top: 0.75rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+
+        .pro-con-item {
+            display: flex;
+            gap: 0.4rem;
+        }
+        .pro-con-item.pro { color: var(--emerald); }
+        .pro-con-item.con { color: var(--amber); }
+
+        /* Section 3: Feature Architecture & Weights Selector */
+        .feature-interactive {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 2rem;
+        }
+
+        .domains-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .domain-block {
+            border-radius: 10px;
+            padding: 1.25rem;
+            background-color: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: var(--transition-smooth);
+        }
+
+        .domain-block:hover {
+            border-color: rgba(255, 255, 255, 0.15);
+            background-color: rgba(255, 255, 255, 0.04);
+        }
+
+        .domain-block.active[data-domain="pop"] { border-color: var(--primary); background-color: var(--primary-glow); }
+        .domain-block.active[data-domain="eco"] { border-color: var(--secondary); background-color: var(--secondary-glow); }
+        .domain-block.active[data-domain="food"] { border-color: var(--accent); background-color: var(--accent-glow); }
+        .domain-block.active[data-domain="feed"] { border-color: var(--emerald); background-color: var(--emerald-glow); }
+
+        .domain-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .domain-title {
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: var(--text-white);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .domain-icon {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .pop-color { background-color: var(--primary); }
+        .eco-color { background-color: var(--secondary); }
+        .food-color { background-color: var(--accent); }
+        .feed-color { background-color: var(--emerald); }
+
+        .domain-count {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .domain-desc {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .feature-details-card {
+            border-radius: 10px;
+            padding: 1.5rem;
+            background-color: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .feature-details-title {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--text-white);
+            margin-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .feature-weight-formula {
+            font-size: 0.75rem;
+            font-family: var(--font-mono);
+            color: var(--primary);
+            background-color: rgba(99, 102, 241, 0.1);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+        }
+
+        .feature-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            max-height: 250px;
+            overflow-y: auto;
+            padding-right: 0.25rem;
+        }
+
+        .feature-item {
+            padding: 0.5rem 0.75rem;
+            border-radius: 6px;
+            background-color: rgba(255, 255, 255, 0.02);
+            font-size: 0.85rem;
+            border: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .feature-item span.code {
+            font-family: var(--font-mono);
+            color: var(--text-secondary);
+        }
+
+        /* Equal weights chart visual */
+        .weight-visualizer-container {
+            border-top: 1px solid var(--border-color);
+            padding-top: 1rem;
+        }
+
+        .weight-visualizer-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .weight-bar {
+            height: 16px;
+            border-radius: 8px;
+            background-color: rgba(255, 255, 255, 0.05);
+            display: flex;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        .weight-segment {
+            height: 100%;
+            transition: var(--transition-smooth);
+            position: relative;
+        }
+
+        .weight-segment:hover::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            color: var(--text-white);
+            padding: 0.2rem 0.5rem;
+            font-size: 0.7rem;
+            border-radius: 4px;
+            white-space: nowrap;
+            z-index: 10;
+        }
+
+        /* Log1p Explanation and Interactive Slider */
+        .log1p-visualizer {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 2rem;
+            margin-top: 1.5rem;
+        }
+
+        .log1p-text {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .formula-box {
+            font-family: var(--font-mono);
+            background-color: rgba(0,0,0,0.25);
+            border: 1px solid var(--border-color);
+            padding: 0.75rem 1rem;
+            border-radius: 6px;
+            color: var(--emerald);
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+        }
+
+        .slider-group {
+            margin-bottom: 1rem;
+        }
+
+        .slider-label {
+            font-size: 0.85rem;
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.25rem;
+        }
+
+        .slider-input {
+            width: 100%;
+            -webkit-appearance: none;
+            height: 6px;
+            border-radius: 3px;
+            background: rgba(255,255,255,0.1);
+            outline: none;
+        }
+
+        .slider-input::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--primary);
+            cursor: pointer;
+            box-shadow: 0 0 10px var(--primary);
+            transition: var(--transition-smooth);
+        }
+
+        .slider-input::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+        }
+
+        .chart-mockup {
+            background-color: rgba(0,0,0,0.2);
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 160px;
+        }
+
+        .chart-bar-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 0.8rem;
+        }
+
+        .chart-bar-label {
+            width: 60px;
+            color: var(--text-secondary);
+        }
+
+        .chart-bar-line-wrapper {
+            flex-grow: 1;
+            background-color: rgba(255,255,255,0.03);
+            height: 16px;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .chart-bar-line {
+            height: 100%;
+            transition: var(--transition-smooth);
+        }
+
+        .chart-bar-line.raw {
+            background: linear-gradient(90deg, var(--accent), var(--accent-glow));
+        }
+
+        .chart-bar-line.log {
+            background: linear-gradient(90deg, var(--emerald), var(--emerald-glow));
+        }
+
+        .chart-bar-value {
+            width: 70px;
+            font-family: var(--font-mono);
+            text-align: right;
+        }
+
+        /* Section 4: 6 Experiments */
+        .experiment-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+
+        .exp-card {
+            background-color: rgba(255, 255, 255, 0.015);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 1.25rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 160px;
+            transition: var(--transition-smooth);
+        }
+
+        .exp-card:hover {
+            border-color: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .exp-card.main {
+            border-color: rgba(99, 102, 241, 0.4);
+            background: linear-gradient(135deg, rgba(20, 28, 45, 0.4), rgba(99, 102, 241, 0.05));
+        }
+
+        .exp-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+
+        .exp-code {
+            font-family: var(--font-mono);
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--primary);
+        }
+
+        .exp-card.main .exp-code {
+            color: var(--accent);
+            text-shadow: 0 0 10px var(--accent-glow);
+        }
+
+        .exp-badge {
+            font-size: 0.7rem;
+            padding: 0.15rem 0.4rem;
+            border-radius: 4px;
+            background-color: rgba(255, 255, 255, 0.05);
+            color: var(--text-secondary);
+        }
+
+        .exp-name {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-white);
+            margin-bottom: 0.5rem;
+        }
+
+        .exp-desc {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        /* Section 5: Implementation Roadmap Timeline */
+        .timeline {
+            position: relative;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            width: 2px;
+            background-color: var(--border-color);
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -1px;
+        }
+
+        .timeline-item {
+            padding: 1rem 3rem;
+            position: relative;
+            background-color: transparent;
+            width: 50%;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+        }
+
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            right: -8px;
+            background-color: var(--bg-base);
+            border: 3px solid var(--border-color);
+            top: 15px;
+            border-radius: 50%;
+            z-index: 1;
+            transition: var(--transition-smooth);
+        }
+
+        .timeline-item.left {
+            left: 0;
+        }
+
+        .timeline-item.right {
+            left: 50%;
+        }
+
+        .timeline-item.right::after {
+            left: -8px;
+        }
+
+        .timeline-content {
+            padding: 1rem 1.5rem;
+            background-color: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-color);
+            position: relative;
+            border-radius: 8px;
+            transition: var(--transition-smooth);
+        }
+
+        .timeline-item:hover .timeline-content {
+            background-color: var(--bg-card-hover);
+            border-color: var(--primary);
+            box-shadow: 0 5px 15px rgba(99, 102, 241, 0.1);
+        }
+
+        .timeline-item:hover::after {
+            background-color: var(--primary);
+            border-color: var(--primary);
+            box-shadow: 0 0 10px var(--primary);
+        }
+
+        .timeline-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text-white);
+            margin-bottom: 0.4rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .timeline-step-num {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            background-color: var(--primary-glow);
+            color: var(--primary);
+            padding: 0.1rem 0.4rem;
+            border-radius: 4px;
+        }
+
+        .timeline-desc {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        /* Section 6: Interactive Verification & Checklist */
+        .check-container {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 2.5rem;
+        }
+
+        .progress-wrapper {
+            background-color: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .progress-radial {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            background: radial-gradient(closest-side, var(--bg-surface) 79%, transparent 80% 100%),
+                        conic-gradient(var(--emerald) 0%, rgba(255, 255, 255, 0.05) 0%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            position: relative;
+            box-shadow: 0 0 20px rgba(0,0,0,0.3);
+            transition: var(--transition-smooth);
+        }
+
+        .progress-percentage {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-white);
+            font-family: var(--font-mono);
+        }
+
+        .checklist-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+            max-height: 380px;
+            overflow-y: auto;
+            padding-right: 0.5rem;
+        }
+
+        .checklist-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            background-color: rgba(255, 255, 255, 0.015);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+        }
+
+        .checklist-item:hover {
+            border-color: rgba(255, 255, 255, 0.1);
+            background-color: rgba(255, 255, 255, 0.03);
+        }
+
+        .checklist-checkbox {
+            margin-top: 0.15rem;
+            width: 16px;
+            height: 16px;
+            border-radius: 4px;
+            border: 2px solid var(--text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: var(--transition-smooth);
+        }
+
+        .checklist-item.checked .checklist-checkbox {
+            background-color: var(--emerald);
+            border-color: var(--emerald);
+        }
+
+        .checklist-checkbox svg {
+            width: 10px;
+            height: 10px;
+            color: var(--bg-surface);
+            stroke-width: 4px;
+            display: none;
+        }
+
+        .checklist-item.checked .checklist-checkbox svg {
+            display: block;
+        }
+
+        .checklist-text {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            transition: var(--transition-smooth);
+        }
+
+        .checklist-item.checked .checklist-text {
+            color: var(--text-muted);
+            text-decoration: line-through;
+        }
+
+        /* Section 7: Output Folders and Profiles */
+        .output-profile-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        /* Directory structure styling */
+        .directory-tree {
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            background-color: rgba(0,0,0,0.2);
+            padding: 1.5rem;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+        }
+
+        .dir-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.4rem;
+        }
+
+        .dir-item.folder {
+            color: var(--amber);
+        }
+
+        .dir-item.file {
+            color: var(--text-primary);
+        }
+
+        .indent-1 { margin-left: 1.5rem; }
+        .indent-2 { margin-left: 3rem; }
+
+        /* Profile Builder Widget */
+        .profile-builder {
+            background-color: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .profile-selects {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .profile-select-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .profile-select-group label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .profile-select {
+            background-color: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            color: var(--text-white);
+            padding: 0.5rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            outline: none;
+            transition: var(--transition-smooth);
+        }
+
+        .profile-select:focus {
+            border-color: var(--primary);
+        }
+
+        .profile-output {
+            background-color: rgba(99, 102, 241, 0.05);
+            border: 1px dashed rgba(99, 102, 241, 0.3);
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 700;
+            color: var(--text-white);
+            font-size: 1rem;
+            letter-spacing: 0.5px;
+            text-shadow: 0 0 10px rgba(99,102,241,0.2);
+        }
+
+        /* Warning/Risk Box */
+        .risk-box {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.05), rgba(245, 158, 11, 0.01));
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            border-radius: 10px;
+            padding: 1.5rem 2rem;
+            margin-top: 1.5rem;
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+        }
+
+        .risk-icon {
+            color: var(--amber);
+            flex-shrink: 0;
+            width: 24px;
+            height: 24px;
+        }
+
+        .risk-content h4 {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-white);
+            margin-bottom: 0.5rem;
+        }
+
+        .risk-content p {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        /* Markdown Link Navigation Helper */
+        .doc-link-footer {
+            margin-top: 3rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+        }
+
+        .doc-link {
+            color: var(--primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            transition: var(--transition-smooth);
+        }
+
+        .doc-link:hover {
+            color: var(--secondary);
+            text-decoration: underline;
+        }
+
+        /* Mobile styling */
+        @media (max-width: 1024px) {
+            aside {
+                display: none; /* simple for representation, can add burger menu */
+            }
+            main {
+                margin-left: 0;
+                width: 100%;
+                padding: 1.5rem;
+            }
+            .feature-interactive {
+                grid-template-columns: 1fr;
+            }
+            .scheme-cards {
+                grid-template-columns: 1fr;
+            }
+            .experiment-grid {
+                grid-template-columns: 1fr;
+            }
+            .check-container {
+                grid-template-columns: 1fr;
+            }
+            .output-profile-grid {
+                grid-template-columns: 1fr;
+            }
+            .timeline::before {
+                left: 20px;
+            }
+            .timeline-item {
+                width: 100%;
+                padding-left: 45px;
+                padding-right: 0;
+            }
+            .timeline-item.right {
+                left: 0;
+            }
+            .timeline-item::after {
+                left: 12px;
+                right: auto;
+            }
+            .timeline-item.right::after {
+                left: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar Navigation -->
+    <aside>
+        <div class="logo-area">
+            <div class="logo-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color: white;"><path d="M2 20h20M5 17V5a3 3 0 0 1 3-3h8a3 3 0 0 1 3 3v12M9 6h6M9 10h6M9 14h3"/></svg>
+            </div>
+            <div class="logo-text">
+                <h1>四域等权聚类</h1>
+                <p>Experimental Deck</p>
+            </div>
+        </div>
+
+        <ul class="nav-links">
+            <li class="active"><a href="#target"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg> 实验目标与范围</a></li>
+            <li><a href="#scheme"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3h18v18H3zM21 9H3M21 15H3M12 3v18"/></svg> 方案比选</a></li>
+            <li><a href="#features"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1zM4 22v-7"/></svg> 特征与计算设计</a></li>
+            <li><a href="#matrix"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg> 六组消融实验</a></li>
+            <li><a href="#roadmap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m12 6-6 6h12zM12 18V12"/></svg> 实施路线图</a></li>
+            <li><a href="#deliverables"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg> 输出目录与标签</a></li>
+            <li><a href="#verification"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4 12 14.01l-3-3"/></svg> 验收标准</a></li>
+        </ul>
+
+        <div class="sidebar-footer">
+            <div>生成日期: 2026-05-30</div>
+            <div>项目: 粮食消费预测专项</div>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main>
+        <!-- Top Metadata Header -->
+        <header>
+            <div class="header-title">
+                <h2>31省四域等权联合聚类实验计划</h2>
+                <p>人口、经济、口粮、饲料粮四域等权聚类分析与消融实验方案详情介绍</p>
+            </div>
+            <div class="meta-badges">
+                <div class="badge primary"><span class="dot"></span>K = 4</div>
+                <div class="badge emerald"><span class="dot"></span>Ready for Implementation</div>
+            </div>
+        </header>
+
+        <!-- Section 1: Objectives and Bounds -->
+        <section id="target">
+            <div class="section-header">
+                <div class="section-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+                </div>
+                <h3>实验目标与范围</h3>
+            </div>
+            <div class="card">
+                <div class="card-title">
+                    <span>独立聚类扩展至综合画像聚类</span>
+                    <span style="font-size: 0.8rem; color: var(--primary);">大陆31个省级行政区</span>
+                </div>
+                <p style="font-size: 0.95rem; color: var(--text-secondary); margin-bottom: 1.5rem;">
+                    在现有四套独立省份聚类之外，新增一次<b>同时考虑人口、经济、口粮和饲料粮四类指标</b>的联合聚类，将大陆 31 个省级行政区固定划分为 4 个簇。联合聚类结果仅用于聚类稳健性对照实验与综合特征刻画，作为后续省级粮食消费预测分组的候选参考。
+                </p>
+                <div class="scope-container">
+                    <div class="scope-box in">
+                        <div class="scope-title">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+                            纳入本次实验范围
+                        </div>
+                        <ul class="scope-list">
+                            <li>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4M21 12a9 9 0 1 1-9-9"/></svg>
+                                聚类对象：大陆 31 个省级行政区（不含港澳台）
+                            </li>
+                            <li>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4M21 12a9 9 0 1 1-9-9"/></svg>
+                                时间窗口：统一使用 2015 - 2024 年共 10 年数据
+                            </li>
+                            <li>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4M21 12a9 9 0 1 1-9-9"/></svg>
+                                算法选择：主实验采用四域等权 KMeans 聚类
+                            </li>
+                            <li>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4M21 12a9 9 0 1 1-9-9"/></svg>
+                                降维用途：PCA 降维仅用于二维聚类结果可视化散点图
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="scope-box out">
+                        <div class="scope-title">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+                            不在本次计划内 (Out of Scope)
+                        </div>
+                        <ul class="scope-list">
+                            <li>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6M9 9l6 6"/></svg>
+                                不修改/覆盖现有的人口、经济、口粮、饲料粮等四套独立聚类结果
+                            </li>
+                            <li>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6M9 9l6 6"/></svg>
+                                不更新现有 HTML 展示页面和部署到 Github Pages 的静态结果
+                            </li>
+                            <li>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6M9 9l6 6"/></svg>
+                                不将联合聚类模型强制挂接到下游粮食总需求预测公式
+                            </li>
+                            <li>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6M9 9l6 6"/></svg>
+                                不引入外部辅助特征（如人口流动、作物种植面积等）
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Schemes -->
+        <section id="scheme">
+            <div class="section-header">
+                <div class="section-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3h18v18H3zM21 9H3M21 15H3M12 3v18"/></svg>
+                </div>
+                <h3>方案比较与比选</h3>
+            </div>
+            <div class="scheme-cards">
+                <div class="scheme-card selected" onclick="selectScheme(this)">
+                    <div class="scheme-header">
+                        <div class="scheme-name">A. 四域等权 KMeans</div>
+                        <div class="scheme-badge">最终采纳</div>
+                    </div>
+                    <div class="scheme-desc">
+                        将四个域的指标分别提取特征并标准化，经过域特征数量的因子校正后，直接使用 KMeans 算法固定 K=4 执行聚类。
+                    </div>
+                    <div class="scheme-pros-cons">
+                        <div class="pro-con-item pro">
+                            <span style="font-weight:700;">+</span> 可解释性强，直接提取核心物理特征进行聚类。
+                        </div>
+                        <div class="pro-con-item pro">
+                            <span style="font-weight:700;">+</span> 方便设计针对单个域的消融实验（C2-C5）。
+                        </div>
+                    </div>
+                </div>
+                <div class="scheme-card" onclick="selectScheme(this)">
+                    <div class="scheme-header">
+                        <div class="scheme-name">B. PCA 降维后再聚类</div>
+                        <div class="scheme-badge">未采纳</div>
+                    </div>
+                    <div class="scheme-desc">
+                        先对人口、经济、口粮、饲料粮等各域进行主成分分析（PCA）降维，然后拼接保留的主成分再进行 KMeans。
+                    </div>
+                    <div class="scheme-pros-cons">
+                        <div class="pro-con-item pro">
+                            <span style="font-weight:700;">+</span> 能够自适应减少相关特征带来的多重共线性冗余。
+                        </div>
+                        <div class="pro-con-item con">
+                            <span style="font-weight:700;">-</span> 样本只有 31 个省份，主成分代表的信息较难被决策层理解和汇报。
+                        </div>
+                    </div>
+                </div>
+                <div class="scheme-card" onclick="selectScheme(this)">
+                    <div class="scheme-header">
+                        <div class="scheme-name">C. 多视图聚类 (Multi-view)</div>
+                        <div class="scheme-badge">未采纳</div>
+                    </div>
+                    <div class="scheme-desc">
+                        将四个领域的特征视为四个不同的独立视图，利用多视图联合图规则或谱聚类算法自适应优化各个视图的最优聚类。
+                    </div>
+                    <div class="scheme-pros-cons">
+                        <div class="pro-con-item pro">
+                            <span style="font-weight:700;">+</span> 自动学习各个视图（指标域）的重要程度。
+                        </div>
+                        <div class="pro-con-item con">
+                            <span style="font-weight:700;">-</span> 算法复杂度高、可解释性低，样本量极小的情况下极其容易过拟合。
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Feature Architecture & Computation Details -->
+        <section id="features">
+            <div class="section-header">
+                <div class="section-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1zM4 22v-7"/></svg>
+                </div>
+                <h3>特征设计与等权计算原理</h3>
+            </div>
+            
+            <div class="card" style="margin-bottom: 1.5rem;">
+                <div class="card-title">20个精简核心特征布局 (精炼核心，剔除信息冗余)</div>
+                <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 1.5rem;">
+                    合并现有四套独立聚类的特征会产生共线性放大。因此，本实验仅保留能够分别表达<b>当前水平（最新年值）</b>、<b>长期趋势（线性回归斜率）</b>和<b>必要波动（变异系数 CV）</b>的核心特征。点击各个板块可查看内部包含的具体字段：
+                </p>
+                
+                <div class="feature-interactive">
+                    <!-- Left: Interactive Blocks -->
+                    <div class="domains-grid">
+                        <div class="domain-block active" data-domain="pop" onclick="switchDomain('pop')">
+                            <div class="domain-header">
+                                <span class="domain-title"><span class="domain-icon pop-color"></span>人口域 (Population)</span>
+                                <span class="domain-count">10 特征</span>
+                            </div>
+                            <p class="domain-desc">包含人口密度(log)、城镇化率、老龄化率、少儿占比、家庭规模。提取最新年与斜率。</p>
+                        </div>
+                        <div class="domain-block" data-domain="eco" onclick="switchDomain('eco')">
+                            <div class="domain-header">
+                                <span class="domain-title"><span class="domain-icon eco-color"></span>经济域 (Economy)</span>
+                                <span class="domain-count">4 特征</span>
+                            </div>
+                            <p class="domain-desc">包含地区总计的人均可支配收入(log)和消费支出(log)。提取最新年与斜率。</p>
+                        </div>
+                        <div class="domain-block" data-domain="food" onclick="switchDomain('food')">
+                            <div class="domain-header">
+                                <span class="domain-title"><span class="domain-icon food-color"></span>口粮域 (Food Grain)</span>
+                                <span class="domain-count">3 特征</span>
+                            </div>
+                            <p class="domain-desc">使用省均口粮值进行计算。提取最新年值、线性趋势斜率以及变异系数。</p>
+                        </div>
+                        <div class="domain-block" data-domain="feed" onclick="switchDomain('feed')">
+                            <div class="domain-header">
+                                <span class="domain-title"><span class="domain-icon feed-color"></span>饲料粮域 (Feed Grain)</span>
+                                <span class="domain-count">3 特征</span>
+                            </div>
+                            <p class="domain-desc">利用人均饲料折算值。包含最新年值、线性趋势斜率与变异系数。</p>
+                        </div>
+                    </div>
+
+                    <!-- Right: Dynamic Details -->
+                    <div class="feature-details-card">
+                        <div>
+                            <div class="feature-details-title">
+                                <span id="detail-title">人口域特征列表</span>
+                                <span class="feature-weight-formula" id="detail-formula">缩放因子: 1 / √10</span>
+                            </div>
+                            <ul class="feature-list" id="detail-list">
+                                <!-- JS Populated -->
+                            </ul>
+                        </div>
+                        
+                        <div class="weight-visualizer-container">
+                            <div class="weight-visualizer-title">
+                                <span>四域对欧氏距离的预期贡献占比 (主实验 M0)</span>
+                                <span style="font-weight: 700; color: var(--emerald);">四域完全等权 (各 25.0%)</span>
+                            </div>
+                            <div class="weight-bar">
+                                <div class="weight-segment pop-color" style="width: 25%;" data-tooltip="人口域权重期望: 25.0%"></div>
+                                <div class="weight-segment eco-color" style="width: 25%;" data-tooltip="经济域权重期望: 25.0%"></div>
+                                <div class="weight-segment food-color" style="width: 25%;" data-tooltip="口粮域权重期望: 25.0%"></div>
+                                <div class="weight-segment feed-color" style="width: 25%;" data-tooltip="饲料粮域权重期望: 25.0%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Log1p Transformation Visualizer -->
+            <div class="card">
+                <div class="card-title">对数转换说明与交互模拟 (log1p 处理)</div>
+                <div class="log1p-visualizer">
+                    <div class="log1p-text">
+                        <p style="margin-bottom: 0.75rem;">
+                            对于<b>跨省数量级差距极大的特征</b>（如上海与西藏的人口密度相差近千倍），若不处理，z-score 后大绝对值样本的平方项仍会主导欧氏距离计算。
+                        </p>
+                        <div class="formula-box">
+                            y = log1p(x) = ln(1 + x)
+                        </div>
+                        <p style="font-size: 0.85rem; color: var(--text-secondary);">
+                            <b>主要处理字段：</b>人口密度、人均可支配收入、人均消费支出。<br>
+                            <b>业务释义变化：</b>对于收入，原始斜率表示绝对增量（每年多花多少元），对数转换后的斜率表示<b>相对增幅速度</b>（更合理反应发达程度的跃迁）。
+                        </p>
+                    </div>
+                    <div class="log1p-interactive">
+                        <div class="slider-group">
+                            <div class="slider-label">
+                                <span>模拟人口密度原始值 (人/平方公里)</span>
+                                <span style="font-family: var(--font-mono); color: var(--accent);" id="raw-val-text">4000</span>
+                            </div>
+                            <input type="range" min="1" max="6000" value="4000" class="slider-input" id="density-slider" oninput="updateLogValue(this.value)">
+                        </div>
+                        
+                        <div class="chart-mockup">
+                            <div class="chart-bar-container">
+                                <div class="chart-bar-label">原始值比例</div>
+                                <div class="chart-bar-line-wrapper">
+                                    <div class="chart-bar-line raw" id="raw-bar" style="width: 66.6%;"></div>
+                                </div>
+                                <div class="chart-bar-value" id="raw-val-label">4000</div>
+                            </div>
+                            
+                            <div class="chart-bar-container">
+                                <div class="chart-bar-label">log1p 对数</div>
+                                <div class="chart-bar-line-wrapper">
+                                    <div class="chart-bar-line log" id="log-bar" style="width: 95%;"></div>
+                                </div>
+                                <div class="chart-bar-value" id="log-val-label">8.29</div>
+                            </div>
+                            <p style="font-size: 0.75rem; color: var(--text-muted); text-align: center;">
+                                * 可拖动滑动条观察：对数转换能在保留大小排序的同时，压制极端大值的辐射效应。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: 6 Sets of Experiments -->
+        <section id="matrix">
+            <div class="section-header">
+                <div class="section-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                </div>
+                <h3>六组实验矩阵</h3>
+            </div>
+            <div class="card" style="margin-bottom: 1.5rem;">
+                <p style="font-size: 0.95rem; color: var(--text-secondary); margin-bottom: 1.5rem;">
+                    为全面检验联合聚类的<b>稳定性（Stability）</b>与<b>核心影响域（Domain Dominance）</b>，设计了六组等权实验。所有实验均采用相同的 KMeans 参数：<code>n_clusters=4, random_state=42, n_init=80, max_iter=300</code>。
+                </p>
+                <div class="experiment-grid">
+                    <div class="exp-card main">
+                        <div class="exp-header">
+                            <span class="exp-code">M0</span>
+                            <span class="exp-badge">主实验</span>
+                        </div>
+                        <div class="exp-name">四域等权联合聚类</div>
+                        <div class="exp-desc">保留人口、经济、口粮和饲料粮四域。各域特征重新缩放，期望权重平分（各占约 25%）。</div>
+                    </div>
+                    <div class="exp-card">
+                        <div class="exp-header">
+                            <span class="exp-code">C1</span>
+                            <span class="exp-badge">特征等权</span>
+                        </div>
+                        <div class="exp-name">全部特征均等权重对照</div>
+                        <div class="exp-desc">不按域调整特征系数，仅做列 z-score。特征多的域（如人口10个）会主导分类。</div>
+                    </div>
+                    <div class="exp-card">
+                        <div class="exp-header">
+                            <span class="exp-code">C2</span>
+                            <span class="exp-badge">消融 A</span>
+                        </div>
+                        <div class="exp-name">移除人口域</div>
+                        <div class="exp-desc">删除人口域10个特征。剩余经济、口粮、饲料粮三个域均分权重（各占 33.3%）。</div>
+                    </div>
+                    <div class="exp-card">
+                        <div class="exp-header">
+                            <span class="exp-code">C3</span>
+                            <span class="exp-badge">消融 B</span>
+                        </div>
+                        <div class="exp-name">移除经济域</div>
+                        <div class="exp-desc">删除经济域4个特征。剩余人口、口粮、饲料粮三个域均分权重（各占 33.3%）。</div>
+                    </div>
+                    <div class="exp-card">
+                        <div class="exp-header">
+                            <span class="exp-code">C4</span>
+                            <span class="exp-badge">消融 C</span>
+                        </div>
+                        <div class="exp-name">移除口粮域</div>
+                        <div class="exp-desc">删除口粮域3个特征。剩余人口、经济、饲料粮三个域均分权重（各占 33.3%）。</div>
+                    </div>
+                    <div class="exp-card">
+                        <div class="exp-header">
+                            <span class="exp-code">C5</span>
+                            <span class="exp-badge">消融 D</span>
+                        </div>
+                        <div class="exp-name">移除饲料粮域</div>
+                        <div class="exp-desc">删除饲料粮域3个特征。剩余人口、经济、口粮三个域均分权重（各占 33.3%）。</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 5: Roadmap Timeline -->
+        <section id="roadmap">
+            <div class="section-header">
+                <div class="section-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m12 6-6 6h12zM12 18V12"/></svg>
+                </div>
+                <h3>实施路线图</h3>
+            </div>
+            
+            <div class="timeline">
+                <div class="timeline-item left">
+                    <div class="timeline-content">
+                        <div class="timeline-title">
+                            <span class="timeline-step-num">Step 01</span>
+                            初始化目录结构
+                        </div>
+                        <p class="timeline-desc">在 <code>Province_Clusting/</code> 下新建联合聚类专区目录：<code>combined_clustering/{code, table, figure}</code>。</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item right">
+                    <div class="timeline-content">
+                        <div class="timeline-title">
+                            <span class="timeline-step-num">Step 02</span>
+                            多源文件加载与清洗
+                        </div>
+                        <p class="timeline-desc">读取人口、经济、口粮、饲料粮以及静态土地面积 5 个 CSV 文件，统一对齐 2015-2024 年的数据。</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item left">
+                    <div class="timeline-content">
+                        <div class="timeline-title">
+                            <span class="timeline-step-num">Step 03</span>
+                            计算派生指标
+                        </div>
+                        <p class="timeline-desc">根据土地面积与总人口计算「人口密度」，提取城镇化率、老龄化比率、少儿占比及家庭规模。</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item right">
+                    <div class="timeline-content">
+                        <div class="timeline-title">
+                            <span class="timeline-step-num">Step 04</span>
+                            对数转换与特征构造
+                        </div>
+                        <p class="timeline-desc">对人口密度、可支配收入、消费支出执行 <code>log1p</code>。计算 20 个核心特征的最新年值、回归斜率及变异系数。</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item left">
+                    <div class="timeline-content">
+                        <div class="timeline-title">
+                            <span class="timeline-step-num">Step 05</span>
+                            权重校正与特征缩放
+                        </div>
+                        <p class="timeline-desc">对各特征执行 z-score 标准化。将各域的特征分别乘以系数 <code>1 / sqrt(域特征数)</code> 以消除特征数量对距离计算的影响。</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item right">
+                    <div class="timeline-content">
+                        <div class="timeline-title">
+                            <span class="timeline-step-num">Step 06</span>
+                            多实验模拟与对齐
+                        </div>
+                        <p class="timeline-desc">运行 M0 主实验与 C1-C5 控制组。使用贪心或匈牙利算法对齐对照组簇标签与主实验 M0，使其在数学上可比。</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item left">
+                    <div class="timeline-content">
+                        <div class="timeline-title">
+                            <span class="timeline-step-num">Step 07</span>
+                            输出物归档与质量评估
+                        </div>
+                        <p class="timeline-desc">计算各实验质量指标（ARI, Silhouette 等），生成稳定性热图、散点图、地图展示，并将结果保存为 CSV 导出。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 6: Deliverables and Profiles -->
+        <section id="deliverables">
+            <div class="section-header">
+                <div class="section-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+                </div>
+                <h3>输出成果目录与画像机制</h3>
+            </div>
+            
+            <div class="output-profile-grid">
+                <!-- Left: Folder Structure -->
+                <div class="directory-tree">
+                    <div class="dir-item folder"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:16px;height:16px;color:#f59e0b;"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg> Province_Clusting/combined_clustering/</div>
+                    <div class="dir-item folder indent-1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:16px;height:16px;color:#f59e0b;"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg> code/</div>
+                    <div class="dir-item file indent-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;color:#cbd5e1;"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg> run_combined_clustering.py</div>
+                    
+                    <div class="dir-item folder indent-1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:16px;height:16px;color:#f59e0b;"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg> table/</div>
+                    <div class="dir-item file indent-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;color:#cbd5e1;"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/></svg> 省份联合聚类结果.csv</div>
+                    <div class="dir-item file indent-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;color:#cbd5e1;"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/></svg> 聚类中心_原始特征均值.csv</div>
+                    <div class="dir-item file indent-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;color:#cbd5e1;"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/></svg> 六组实验聚类质量对比.csv</div>
+                    <div class="dir-item file indent-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;color:#cbd5e1;"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/></svg> 省份分组稳定性.csv</div>
+                    
+                    <div class="dir-item folder indent-1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:16px;height:16px;color:#f59e0b;"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg> figure/</div>
+                    <div class="dir-item file indent-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;color:#cbd5e1;"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/></svg> 中国地图聚类结果.png</div>
+                    <div class="dir-item file indent-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;color:#cbd5e1;"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/></svg> 聚类核心特征均值热图.png</div>
+                    <div class="dir-item file indent-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;color:#cbd5e1;"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/></svg> 省份聚类稳定性热图.png</div>
+                </div>
+
+                <!-- Right: Profile Builder Widget -->
+                <div class="profile-builder">
+                    <div>
+                        <div class="card-title" style="margin-bottom: 0.5rem; font-size: 1rem;">
+                            <span>多维画像标签模拟生成器</span>
+                            <span style="font-size: 0.75rem; color: var(--text-muted);">自动编码规则</span>
+                        </div>
+                        <p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 1rem;">
+                            为了避免干巴的「类0-3」代号，我们将根据各簇中心在特征空间中的相对位置，使用以“人口-经济-口粮-饲料”为核心的多维精炼画像进行说明。
+                        </p>
+                        
+                        <div class="profile-selects">
+                            <div class="profile-select-group">
+                                <label>1. 人口密度水平</label>
+                                <select class="profile-select" id="sel-pop" onchange="buildProfileLabel()">
+                                    <option value="高密度">高密度</option>
+                                    <option value="中位密度">中位密度</option>
+                                    <option value="低密度" selected>低密度</option>
+                                </select>
+                            </div>
+                            <div class="profile-select-group">
+                                <label>2. 经济(收入)水平</label>
+                                <select class="profile-select" id="sel-eco" onchange="buildProfileLabel()">
+                                    <option value="高收入">高收入</option>
+                                    <option value="中位收入">中位收入</option>
+                                    <option value="低收入" selected>低收入</option>
+                                </select>
+                            </div>
+                            <div class="profile-select-group">
+                                <label>3. 口粮趋势</label>
+                                <select class="profile-select" id="sel-food" onchange="buildProfileLabel()">
+                                    <option value="口粮上升">口粮上升</option>
+                                    <option value="口粮中位下降" selected>口粮下降</option>
+                                    <option value="口粮基本稳定">口粮稳定</option>
+                                </select>
+                            </div>
+                            <div class="profile-select-group">
+                                <label>4. 饲料粮趋势</label>
+                                <select class="profile-select" id="sel-feed" onchange="buildProfileLabel()">
+                                    <option value="饲料粮高位上升" selected>饲料粮上升</option>
+                                    <option value="饲料粮下降">饲料粮下降</option>
+                                    <option value="饲料粮中位稳定">饲料粮稳定</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="profile-output" id="profile-result">
+                        低密度-低收入-口粮中位下降-饲料粮高位上升
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 7: Quality Checklist -->
+        <section id="verification">
+            <div class="section-header">
+                <div class="section-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4 12 14.01l-3-3"/></svg>
+                </div>
+                <h3>质量检查与验收标准</h3>
+            </div>
+            
+            <div class="card">
+                <div class="check-container">
+                    <div class="progress-wrapper">
+                        <div class="progress-radial" id="radial-bar">
+                            <div class="progress-percentage" id="percent-lbl">0%</div>
+                        </div>
+                        <div style="font-size: 0.9rem; font-weight: 600; color: var(--text-white);">代码与数据验收进度</div>
+                        <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem;" id="checked-count-lbl">已通过 0 / 12 项检查</div>
+                    </div>
+                    
+                    <div class="checklist-group">
+                        <div class="checklist-item" onclick="toggleCheck(this)">
+                            <div class="checklist-checkbox">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4"><path d="M20 6 9 17l-5-5"/></svg>
+                            </div>
+                            <span class="checklist-text">面积表覆盖且仅覆盖大陆31个省份，无港澳台数据。</span>
+                        </div>
+                        <div class="checklist-item" onclick="toggleCheck(this)">
+                            <div class="checklist-checkbox">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4"><path d="M20 6 9 17l-5-5"/></svg>
+                            </div>
+                            <span class="checklist-text">土地调查面积全部为正数，且平方公里与公顷满足百倍关系换算。</span>
+                        </div>
+                        <div class="checklist-item" onclick="toggleCheck(this)">
+                            <div class="checklist-checkbox">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4"><path d="M20 6 9 17l-5-5"/></svg>
+                            </div>
+                            <span class="checklist-text">土地面积表与本地人口表省份集合完全对齐（拼写/顺序一致）。</span>
+                        </div>
+                        <div class="checklist-item" onclick="toggleCheck(this)">
+                            <div class="checklist-checkbox">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4"><path d="M20 6 9 17l-5-5"/></svg>
+                            </div>
+                            <span class="checklist-text">2015-2024年总人口记录有 310 条，且人口密度非空非负。</span>
+                        </div>
+                        <div class="checklist-item" onclick="toggleCheck(this)">
+                            <div class="checklist-checkbox">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4"><path d="M20 6 9 17l-5-5"/></svg>
+                            </div>
+                            <span class="checklist-text">20个特征矩阵中不存在任何 NaN（空值）或 Inf（无穷大值）。</span>
+                        </div>
+                        <div class="checklist-item" onclick="toggleCheck(this)">
+                            <div class="checklist-checkbox">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4"><path d="M20 6 9 17l-5-5"/></svg>
+                            </div>
+                            <span class="checklist-text">M0、C1-C5 六组实验全部对齐为相同的聚类超参数（K=4, random_state=42）。</span>
+                        </div>
+                        <div class="checklist-item" onclick="toggleCheck(this)">
+                            <div class="checklist-checkbox">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4"><path d="M20 6 9 17l-5-5"/></svg>
+                            </div>
+                            <span class="checklist-text">没有出现任何“空簇（省份数量为0的簇）”。</span>
+                        </div>
+                        <div class="checklist-item" onclick="toggleCheck(this)">
+                            <div class="checklist-checkbox">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4"><path d="M20 6 9 17l-5-5"/></svg>
+                            </div>
+                            <span class="checklist-text">PCA主成分分析仅作为散点图可视化绘制，不输入给KMeans训练。</span>
+                        </div>
+                        <div class="checklist-item" onclick="toggleCheck(this)">
+                            <div class="checklist-checkbox">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4"><path d="M20 6 9 17l-5-5"/></svg>
+                            </div>
+                            <span class="checklist-text">对照消融实验C1-C5在评估与对比前，对齐了簇编号映射（标签对齐）。</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Risk and boundaries -->
+            <div class="risk-box">
+                <div class="risk-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                </div>
+                <div class="risk-content">
+                    <h4>边界解释与风险提示</h4>
+                    <p>
+                        由于省份样本量较小（仅有31个大陆省份），在解释聚类指标与消融实验的一致性变动（ARI）时，应当紧密结合特征均值的画像意义，而不能仅孤立地根据数学指标下结论。此外，土地调查总面积使用的是静态 1996 年基准数据以提供一致空间分母，汇报时需对此口径做出清晰批注，避免误读。
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer link back to MD -->
+        <footer class="doc-link-footer">
+            <span style="color: var(--text-muted);">© 2026 粮食需求与消费预测课题组. 版权所有.</span>
+            <a href="file:///media/sf_/Provincial_Grain_Forecast/Province_Clusting/%E5%9B%9B%E5%9F%9F%E7%AD%89%E6%9D%83%E8%81%94%E5%90%88%E8%81%9A%E7%B1%BB%E5%AE%9E%E9%AA%8C%E8%AE%A1%E5%88%92.md" class="doc-link">
+                查看原始 Markdown 规划文件
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14 21 3"/></svg>
+            </a>
+        </footer>
+    </main>
+
+    <script>
+        // Data Structures for Feature Display
+        const domains = {
+            pop: {
+                title: "人口域特征列表 (Population)",
+                formula: "缩放因子: 1 / √10",
+                features: [
+                    { name: "人口密度最新年值", code: "density_latest (log1p)" },
+                    { name: "人口密度趋势斜率", code: "density_slope (log1p)" },
+                    { name: "城镇化率最新年值", code: "urban_rate_latest" },
+                    { name: "城镇化率趋势斜率", code: "urban_rate_slope" },
+                    { name: "老龄人口占比最新年值", code: "elder_ratio_latest" },
+                    { name: "老龄人口占比趋势斜率", code: "elder_ratio_slope" },
+                    { name: "少儿人口占比最新年值", code: "child_ratio_latest" },
+                    { name: "少儿人口占比趋势斜率", code: "child_ratio_slope" },
+                    { name: "平均家庭规模最新年值", code: "family_size_latest" },
+                    { name: "平均家庭规模趋势斜率", code: "family_size_slope" }
+                ]
+            },
+            eco: {
+                title: "经济域特征列表 (Economy)",
+                formula: "缩放因子: 1 / √4",
+                features: [
+                    { name: "人均可支配收入最新年值", code: "disposable_income_latest (log1p)" },
+                    { name: "人均可支配收入趋势斜率", code: "disposable_income_slope (log1p)" },
+                    { name: "人均消费支出最新年值", code: "consumption_exp_latest (log1p)" },
+                    { name: "人均消费支出趋势斜率", code: "consumption_exp_slope (log1p)" }
+                ]
+            },
+            food: {
+                title: "口粮域特征列表 (Food Grain)",
+                formula: "缩放因子: 1 / √3",
+                features: [
+                    { name: "口粮最新年均值", code: "food_grain_latest" },
+                    { name: "口粮消费线性趋势斜率", code: "food_grain_slope" },
+                    { name: "口粮消费历年变异系数", code: "food_grain_cv" }
+                ]
+            },
+            feed: {
+                title: "饲料粮域特征列表 (Feed Grain)",
+                formula: "缩放因子: 1 / √3",
+                features: [
+                    { name: "人均饲料粮折算最新年值", code: "feed_grain_latest" },
+                    { name: "人均饲料粮折算趋势斜率", code: "feed_grain_slope" },
+                    { name: "人均饲料粮折算历年变异系数", code: "feed_grain_cv" }
+                ]
+            }
+        };
+
+        // Scroll highlight navigation
+        window.addEventListener('DOMContentLoaded', () => {
+            switchDomain('pop'); // Default load POP features
+            updateLogValue(4000); // Default log1p interactive
+            
+            const observer = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    const id = entry.target.getAttribute('id');
+                    if (entry.intersectionRatio > 0.4) {
+                        document.querySelectorAll('aside ul.nav-links li').forEach(li => {
+                            li.classList.remove('active');
+                        });
+                        const activeAnchor = document.querySelector(`aside ul.nav-links li a[href="#${id}"]`);
+                        if (activeAnchor) {
+                            activeAnchor.parentElement.classList.add('active');
+                        }
+                    }
+                });
+            }, { threshold: [0.2, 0.5, 0.8] });
+
+            document.querySelectorAll('section').forEach(section => {
+                observer.observe(section);
+            });
+        });
+
+        // Scheme Selector Tab Mock
+        function selectScheme(element) {
+            document.querySelectorAll('.scheme-card').forEach(card => {
+                card.classList.remove('selected');
+                const badge = card.querySelector('.scheme-badge');
+                if (badge) badge.innerText = "未采纳";
+            });
+            element.classList.add('selected');
+            const badge = element.querySelector('.scheme-badge');
+            if (badge) badge.innerText = "最终采纳";
+        }
+
+        // Domain switcher for feature list visual
+        function switchDomain(domainKey) {
+            document.querySelectorAll('.domain-block').forEach(block => {
+                block.classList.remove('active');
+            });
+            document.querySelector(`.domain-block[data-domain="${domainKey}"]`).classList.add('active');
+            
+            const data = domains[domainKey];
+            document.getElementById('detail-title').innerText = data.title;
+            document.getElementById('detail-formula').innerText = data.formula;
+            
+            const listContainer = document.getElementById('detail-list');
+            listContainer.innerHTML = '';
+            
+            data.features.forEach(feat => {
+                const li = document.createElement('li');
+                li.className = 'feature-item';
+                li.innerHTML = `<span>${feat.name}</span><span class="code">${feat.code}</span>`;
+                listContainer.appendChild(li);
+            });
+        }
+
+        // Log1p live simulator
+        function updateLogValue(val) {
+            document.getElementById('raw-val-text').innerText = parseInt(val).toLocaleString();
+            document.getElementById('raw-val-label').innerText = parseInt(val).toLocaleString();
+            
+            // Raw percentage width (max simulated is 6000)
+            const rawPct = (val / 6000) * 100;
+            document.getElementById('raw-bar').style.width = `${Math.max(2, rawPct)}%`;
+            
+            // Log1p computation
+            const logVal = Math.log1p(parseFloat(val));
+            document.getElementById('log-val-label').innerText = logVal.toFixed(2);
+            
+            // Log percentage width (max log value is log1p(6000) ≈ 8.7)
+            const logPct = (logVal / 8.7) * 100;
+            document.getElementById('log-bar').style.width = `${Math.max(2, logPct)}%`;
+        }
+
+        // Profile Builder Live output
+        function buildProfileLabel() {
+            const p = document.getElementById('sel-pop').value;
+            const e = document.getElementById('sel-eco').value;
+            const fo = document.getElementById('sel-food').value;
+            const fe = document.getElementById('sel-feed').value;
+            
+            document.getElementById('profile-result').innerText = `${p}-${e}-${fo}-${fe}`;
+        }
+
+        // Checklist radial logic
+        function toggleCheck(element) {
+            element.classList.toggle('checked');
+            
+            const total = document.querySelectorAll('.checklist-item').length;
+            const checked = document.querySelectorAll('.checklist-item.checked').length;
+            const percent = total > 0 ? Math.round((checked / total) * 100) : 0;
+            
+            // Update UI
+            document.getElementById('percent-lbl').innerText = `${percent}%`;
+            document.getElementById('checked-count-lbl').innerText = `已通过 ${checked} / ${total} 项检查`;
+            
+            // Update conic gradient
+            document.getElementById('radial-bar').style.background = `radial-gradient(closest-side, var(--bg-surface) 79%, transparent 80% 100%), conic-gradient(var(--emerald) ${percent}%, rgba(255, 255, 255, 0.05) ${percent}%)`;
+        }
+    </script>
+</body>
+</html>

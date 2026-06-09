@@ -1,0 +1,188 @@
+[
+  {
+    "name": "内蒙古",
+    "code": "150000",
+    "stability_score": 6,
+    "detail": "分类在所有实验中均保持完全稳定"
+  },
+  {
+    "name": "吉林",
+    "code": "220000",
+    "stability_score": 6,
+    "detail": "分类在所有实验中均保持完全稳定"
+  },
+  {
+    "name": "辽宁",
+    "code": "210000",
+    "stability_score": 6,
+    "detail": "分类在所有实验中均保持完全稳定"
+  },
+  {
+    "name": "黑龙江",
+    "code": "230000",
+    "stability_score": 6,
+    "detail": "分类在所有实验中均保持完全稳定"
+  },
+  {
+    "name": "河北",
+    "code": "130000",
+    "stability_score": 3,
+    "detail": "在所有特征直接等权(C1), 移除口粮域(C4), 移除饲料粮域(C5)时分类漂移"
+  },
+  {
+    "name": "河南",
+    "code": "410000",
+    "stability_score": 3,
+    "detail": "在所有特征直接等权(C1), 移除口粮域(C4), 移除饲料粮域(C5)时分类漂移"
+  },
+  {
+    "name": "上海",
+    "code": "310000",
+    "stability_score": 6,
+    "detail": "分类在所有实验中均保持完全稳定"
+  },
+  {
+    "name": "北京",
+    "code": "110000",
+    "stability_score": 6,
+    "detail": "分类在所有实验中均保持完全稳定"
+  },
+  {
+    "name": "天津",
+    "code": "120000",
+    "stability_score": 6,
+    "detail": "分类在所有实验中均保持完全稳定"
+  },
+  {
+    "name": "宁夏",
+    "code": "640000",
+    "stability_score": 6,
+    "detail": "分类在所有实验中均保持完全稳定"
+  },
+  {
+    "name": "新疆",
+    "code": "650000",
+    "stability_score": 6,
+    "detail": "分类在所有实验中均保持完全稳定"
+  },
+  {
+    "name": "甘肃",
+    "code": "620000",
+    "stability_score": 6,
+    "detail": "分类在所有实验中均保持完全稳定"
+  },
+  {
+    "name": "贵州",
+    "code": "520000",
+    "stability_score": 6,
+    "detail": "分类在所有实验中均保持完全稳定"
+  },
+  {
+    "name": "青海",
+    "code": "630000",
+    "stability_score": 6,
+    "detail": "分类在所有实验中均保持完全稳定"
+  },
+  {
+    "name": "山西",
+    "code": "140000",
+    "stability_score": 5,
+    "detail": "仅在所有特征直接等权(C1)时分类漂移"
+  },
+  {
+    "name": "云南",
+    "code": "530000",
+    "stability_score": 4,
+    "detail": "在所有特征直接等权(C1), 移除经济域(C3)时分类漂移"
+  },
+  {
+    "name": "四川",
+    "code": "510000",
+    "stability_score": 4,
+    "detail": "在所有特征直接等权(C1), 移除经济域(C3)时分类漂移"
+  },
+  {
+    "name": "广西",
+    "code": "450000",
+    "stability_score": 4,
+    "detail": "在所有特征直接等权(C1), 移除经济域(C3)时分类漂移"
+  },
+  {
+    "name": "陕西",
+    "code": "610000",
+    "stability_score": 4,
+    "detail": "在所有特征直接等权(C1), 移除人口域(C2)时分类漂移"
+  },
+  {
+    "name": "湖北",
+    "code": "420000",
+    "stability_score": 3,
+    "detail": "在所有特征直接等权(C1), 移除经济域(C3), 移除饲料粮域(C5)时分类漂移"
+  },
+  {
+    "name": "山东",
+    "code": "370000",
+    "stability_score": 6,
+    "detail": "分类在所有实验中均保持完全稳定"
+  },
+  {
+    "name": "广东",
+    "code": "440000",
+    "stability_score": 6,
+    "detail": "分类在所有实验中均保持完全稳定"
+  },
+  {
+    "name": "福建",
+    "code": "350000",
+    "stability_score": 6,
+    "detail": "分类在所有实验中均保持完全稳定"
+  },
+  {
+    "name": "江苏",
+    "code": "320000",
+    "stability_score": 5,
+    "detail": "仅在移除经济域(C3)时分类漂移"
+  },
+  {
+    "name": "浙江",
+    "code": "330000",
+    "stability_score": 5,
+    "detail": "仅在移除经济域(C3)时分类漂移"
+  },
+  {
+    "name": "海南",
+    "code": "460000",
+    "stability_score": 5,
+    "detail": "仅在移除饲料粮域(C5)时分类漂移"
+  },
+  {
+    "name": "重庆",
+    "code": "500000",
+    "stability_score": 5,
+    "detail": "仅在移除经济域(C3)时分类漂移"
+  },
+  {
+    "name": "安徽",
+    "code": "340000",
+    "stability_score": 4,
+    "detail": "在移除经济域(C3), 移除饲料粮域(C5)时分类漂移"
+  },
+  {
+    "name": "湖南",
+    "code": "430000",
+    "stability_score": 4,
+    "detail": "在移除经济域(C3), 移除饲料粮域(C5)时分类漂移"
+  },
+  {
+    "name": "江西",
+    "code": "360000",
+    "stability_score": 3,
+    "detail": "在移除人口域(C2), 移除经济域(C3), 移除饲料粮域(C5)时分类漂移"
+  },
+  {
+    "name": "西藏",
+    "code": "540000",
+    "stability_score": 6,
+    "detail": "分类在所有实验中均保持完全稳定"
+  }
+]
